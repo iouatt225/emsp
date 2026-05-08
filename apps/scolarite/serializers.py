@@ -190,8 +190,14 @@ class TransportRouteSerializer(serializers.ModelSerializer):
 
 
 class TransportCarSerializer(serializers.ModelSerializer):
-    depot_label = serializers.CharField(source="depot.label", read_only=True, default="")
-    route_label = serializers.CharField(source="route.label", read_only=True, default="")
+    depot_label = serializers.SerializerMethodField()
+    route_label = serializers.SerializerMethodField()
+
+    def get_depot_label(self, obj):
+        return obj.depot.label if obj.depot else ""
+
+    def get_route_label(self, obj):
+        return obj.route.label if obj.route else ""
 
     class Meta:
         model = TransportCar
@@ -213,8 +219,16 @@ class TransportCarSerializer(serializers.ModelSerializer):
 class TransportDriverSerializer(serializers.ModelSerializer):
     full_name = serializers.CharField(source="user.full_name", read_only=True)
     email = serializers.EmailField(source="user.email", read_only=True)
-    car_label = serializers.CharField(source="car.label", read_only=True, default="")
-    route_label = serializers.CharField(source="car.route.label", read_only=True, default="")
+    car_label = serializers.SerializerMethodField()
+    route_label = serializers.SerializerMethodField()
+
+    def get_car_label(self, obj):
+        return obj.car.label if obj.car else ""
+
+    def get_route_label(self, obj):
+        if obj.car and obj.car.route:
+            return obj.car.route.label
+        return ""
 
     class Meta:
         model = TransportDriver
@@ -236,7 +250,10 @@ class TransportDriverSerializer(serializers.ModelSerializer):
 class TransportTripSerializer(serializers.ModelSerializer):
     driver_name = serializers.CharField(source="driver.user.full_name", read_only=True)
     car_label = serializers.CharField(source="car.label", read_only=True)
-    route_label = serializers.CharField(source="route.label", read_only=True, default="")
+    route_label = serializers.SerializerMethodField()
+
+    def get_route_label(self, obj):
+        return obj.route.label if obj.route else ""
 
     class Meta:
         model = TransportTrip
@@ -258,9 +275,12 @@ class TransportTripSerializer(serializers.ModelSerializer):
 
 class TransportPaymentSerializer(serializers.ModelSerializer):
     car = TransportCarSerializer(read_only=True)
-    commune_label = serializers.CharField(source="commune.label", read_only=True, default="")
+    commune_label = serializers.SerializerMethodField()
     student_name = serializers.CharField(source="etudiant.user.full_name", read_only=True)
     matricule = serializers.CharField(source="etudiant.matricule", read_only=True)
+
+    def get_commune_label(self, obj):
+        return obj.commune.label if obj.commune else ""
 
     class Meta:
         model = TransportPayment

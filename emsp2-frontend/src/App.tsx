@@ -1,4 +1,4 @@
-import { lazy, Suspense, useEffect } from "react";
+import { lazy, Suspense, type ReactNode, useEffect } from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
 
 import Layout from "./components/common/Layout";
@@ -8,18 +8,18 @@ import { useAuth } from "./hooks/useAuth";
 import AdminPortalLayout from "./layouts/portal/AdminPortalLayout";
 import DriverPortalLayout from "./layouts/portal/DriverPortalLayout";
 import StudentPortalLayout from "./layouts/portal/StudentPortalLayout";
-import LoginPage from "./pages/auth/LoginPage";
-import RegisterPortalPage from "./pages/auth/RegisterPortalPage";
-import UnauthorizedPage from "./pages/auth/UnauthorizedPage";
-import ActualiteDetailPage from "./pages/public/ActualiteDetailPage";
-import ActualitesPage from "./pages/public/ActualitesPage";
-import ContactPage from "./pages/public/ContactPage";
-import FormationCategoryPage from "./pages/public/FormationCategoryPage";
-import FormationDetailPage from "./pages/public/FormationDetailPage";
-import FormationsPage from "./pages/public/FormationsPage";
-import HomePage from "./pages/public/HomePage";
-import InscriptionPage from "./pages/public/InscriptionPage";
-import MediathequePage from "./pages/public/MediathequePage";
+const LoginPage = lazy(() => import("./pages/auth/LoginPage"));
+const RegisterPortalPage = lazy(() => import("./pages/auth/RegisterPortalPage"));
+const UnauthorizedPage = lazy(() => import("./pages/auth/UnauthorizedPage"));
+const ActualiteDetailPage = lazy(() => import("./pages/public/ActualiteDetailPage"));
+const ActualitesPage = lazy(() => import("./pages/public/ActualitesPage"));
+const ContactPage = lazy(() => import("./pages/public/ContactPage"));
+const FormationCategoryPage = lazy(() => import("./pages/public/FormationCategoryPage"));
+const FormationDetailPage = lazy(() => import("./pages/public/FormationDetailPage"));
+const FormationsPage = lazy(() => import("./pages/public/FormationsPage"));
+const HomePage = lazy(() => import("./pages/public/HomePage"));
+const InscriptionPage = lazy(() => import("./pages/public/InscriptionPage"));
+const MediathequePage = lazy(() => import("./pages/public/MediathequePage"));
 
 const AdminAcademicPage = lazy(() => import("./pages/portal/admin/AdminAcademicPage"));
 const AdminAccountingPage = lazy(() => import("./pages/portal/admin/AdminAccountingPage"));
@@ -43,6 +43,7 @@ const StudentSchedulePage = lazy(() => import("./pages/portal/student/StudentSch
 const StudentStagesPage = lazy(() => import("./pages/portal/student/StudentStagesPage"));
 
 const PortalFallback = () => <div className="h-72 animate-pulse rounded-2xl bg-white shadow-sm" />;
+const RouteElement = ({ children }: { children: ReactNode }) => <Suspense fallback={<PortalFallback />}>{children}</Suspense>;
 
 const DashboardExternalRedirect = () => {
   useEffect(() => {
@@ -60,25 +61,25 @@ const AdminIndexRedirect = () => {
 function App() {
   return (
     <Routes>
-      <Route path="/login" element={<LoginPage />} />
+      <Route path="/login" element={<RouteElement><LoginPage /></RouteElement>} />
       <Route path="/dashboard/*" element={<DashboardExternalRedirect />} />
-      <Route path="/register" element={<RegisterPortalPage />} />
-      <Route path="/unauthorized" element={<UnauthorizedPage />} />
+      <Route path="/register" element={<RouteElement><RegisterPortalPage /></RouteElement>} />
+      <Route path="/unauthorized" element={<RouteElement><UnauthorizedPage /></RouteElement>} />
 
       <Route element={<Layout />}>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/formations" element={<FormationsPage />} />
-        <Route path="/formations/fsp" element={<FormationCategoryPage programType="FSP" />} />
-        <Route path="/formations/fsp/:code" element={<FormationDetailPage />} />
-        <Route path="/formations/fs-menum" element={<FormationCategoryPage programType="FS-MENUM" />} />
-        <Route path="/formations/fs-menum/:code" element={<FormationDetailPage />} />
-        <Route path="/formations/certifiantes" element={<FormationCategoryPage programType="FCQ" />} />
-        <Route path="/formations/certifiantes/:code" element={<FormationDetailPage />} />
-        <Route path="/inscription" element={<InscriptionPage />} />
-        <Route path="/actualites" element={<ActualitesPage />} />
-        <Route path="/actualites/:slug" element={<ActualiteDetailPage />} />
-        <Route path="/mediatheque" element={<MediathequePage />} />
-        <Route path="/contact" element={<ContactPage />} />
+        <Route path="/" element={<RouteElement><HomePage /></RouteElement>} />
+        <Route path="/formations" element={<RouteElement><FormationsPage /></RouteElement>} />
+        <Route path="/formations/fsp" element={<RouteElement><FormationCategoryPage programType="FSP" /></RouteElement>} />
+        <Route path="/formations/fsp/:code" element={<RouteElement><FormationDetailPage /></RouteElement>} />
+        <Route path="/formations/fs-menum" element={<RouteElement><FormationCategoryPage programType="FS-MENUM" /></RouteElement>} />
+        <Route path="/formations/fs-menum/:code" element={<RouteElement><FormationDetailPage /></RouteElement>} />
+        <Route path="/formations/certifiantes" element={<RouteElement><FormationCategoryPage programType="FCQ" /></RouteElement>} />
+        <Route path="/formations/certifiantes/:code" element={<RouteElement><FormationDetailPage /></RouteElement>} />
+        <Route path="/inscription" element={<RouteElement><InscriptionPage /></RouteElement>} />
+        <Route path="/actualites" element={<RouteElement><ActualitesPage /></RouteElement>} />
+        <Route path="/actualites/:slug" element={<RouteElement><ActualiteDetailPage /></RouteElement>} />
+        <Route path="/mediatheque" element={<RouteElement><MediathequePage /></RouteElement>} />
+        <Route path="/contact" element={<RouteElement><ContactPage /></RouteElement>} />
       </Route>
 
       <Route element={<ProtectedRoute allowedRoles={["etudiant"]} />}>

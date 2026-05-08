@@ -1,13 +1,15 @@
+import { lazy, Suspense } from "react";
 import { Clock3, GraduationCap, TrendingUp, Users } from "lucide-react";
 import { Link } from "react-router-dom";
 
 import AdminPageHeader from "../../../components/dashboard/AdminPageHeader";
-import AdvancedDashboardCharts from "../../../components/dashboard/AdvancedDashboardCharts";
 import SurfaceCard from "../../../components/dashboard/SurfaceCard";
 import { getVisibleAdminPortalItems } from "../../../config/adminPortal";
 import { useAuth } from "../../../hooks/useAuth";
 import { AreaComparisonChart, DonutBreakdown, HorizontalBars, MiniLineChart } from "../../../components/dashboard/SvgCharts";
 import { useAdminDashboard, useFinanceSummary } from "../../../hooks/useAdminDashboard";
+
+const AdvancedDashboardCharts = lazy(() => import("../../../components/dashboard/AdvancedDashboardCharts"));
 
 const AdminDashboardPage = () => {
   const { user } = useAuth();
@@ -166,10 +168,12 @@ const AdminDashboardPage = () => {
           <p className="text-sm uppercase tracking-[0.24em] text-secondary">Analyse avancee</p>
           <h2 className="mt-2 font-display text-2xl font-bold text-dark">Visualisations immersives du campus</h2>
           <p className="mt-2 max-w-4xl text-sm leading-6 text-slate-600">
-            Vue relationnelle 3D, exploration hierarchique, globe interactif et flux temps reel pour un pilotage plus vivant.
+            Vue relationnelle 3D et exploration hierarchique avec une charge plus legere pour la production.
           </p>
         </div>
-        <AdvancedDashboardCharts advanced={data.advanced} />
+        <Suspense fallback={<div className="h-[420px] animate-pulse rounded-3xl bg-white" />}>
+          <AdvancedDashboardCharts advanced={data.advanced} />
+        </Suspense>
       </div>
 
       <SurfaceCard className="emsp-panel p-6">

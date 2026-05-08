@@ -14,8 +14,18 @@ export default defineConfig(({ command }) => ({
             return;
           }
 
+          if (id.includes("react-force-graph-3d") || id.includes("3d-force-graph") || id.includes("three-forcegraph") || id.includes("\\three\\") || id.includes("/three/")) {
+            return "vendor-force";
+          }
+          if (id.includes("@nivo")) return "vendor-nivo";
           if (id.includes("recharts")) return "vendor-charts";
-          return "vendor-core";
+          if (id.includes("react") || id.includes("react-dom") || id.includes("react-router") || id.includes("@tanstack/react-query")) {
+            return "vendor-framework";
+          }
+          if (id.includes("lucide-react") || id.includes("framer-motion") || id.includes("axios") || id.includes("zustand") || id.includes("zod") || id.includes("react-hook-form")) {
+            return "vendor-ui";
+          }
+          return undefined;
         },
       },
     },
