@@ -4,7 +4,6 @@ providers = ["python"]
 nixPkgs = [
   "python311Full",
   "pkg-config",
-  "pip",
   "pango",
   "cairo",
   "gdk-pixbuf",
