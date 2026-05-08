@@ -56,17 +56,17 @@ const FormationsPage = () => {
 
   return (
     <div className="bg-white">
-      <section className="relative overflow-hidden bg-dark py-20 text-white">
+      <section className="relative overflow-hidden bg-[linear-gradient(135deg,#ecfdf5_0%,#ffffff_58%,#fef9c3_100%)] py-20 text-dark">
         {heroImages[0] ? (
-          <img src={heroImages[0].url} alt={heroImages[0].altText || heroImages[0].title} className="absolute inset-0 h-full w-full object-cover opacity-20" />
+          <img src={heroImages[0].url} alt={heroImages[0].altText || heroImages[0].title} className="absolute inset-0 h-full w-full object-cover opacity-10" />
         ) : null}
-        <div className="absolute inset-0 bg-gradient-to-r from-dark via-dark/90 to-secondary/60" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(34,197,94,0.18),transparent_32%),radial-gradient(circle_at_bottom_left,rgba(250,204,21,0.2),transparent_28%)]" />
         <div className="relative mx-auto max-w-7xl px-4">
-          <p className="text-sm uppercase tracking-[0.28em] text-primary">Catalogue</p>
+          <p className="text-sm font-semibold uppercase tracking-[0.28em] text-secondary">Catalogue</p>
           <h1 className="mt-4 max-w-3xl font-display text-4xl font-bold sm:text-5xl">
             Nos programmes de formation pour les secteurs postal et numerique
           </h1>
-          <p className="mt-4 max-w-2xl text-base text-white/85 sm:text-lg">
+          <p className="mt-4 max-w-2xl text-base text-slate-600 sm:text-lg">
             L'offre EMSP s'articule autour des Formations Superieures Postales, des licences et masters FS-MENUM, ainsi que d'un parcours d'excellence internationale.
           </p>
         </div>

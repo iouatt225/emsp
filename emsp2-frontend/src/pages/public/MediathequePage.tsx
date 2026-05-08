@@ -232,7 +232,7 @@ const MediathequePage = () => {
                       {formatLongDate(item.createdAt)}
                     </div>
                   ) : null}
-                  <div className="absolute inset-0 bg-gradient-to-t from-dark/80 via-dark/10 to-transparent opacity-0 transition group-hover:opacity-100" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-emerald-950/80 via-emerald-900/15 to-transparent opacity-0 transition group-hover:opacity-100" />
                   <div className="absolute inset-x-0 bottom-0 translate-y-4 p-5 text-white opacity-0 transition group-hover:translate-y-0 group-hover:opacity-100">
                     <p className="font-display text-xl font-semibold">{item.title}</p>
                     {item.description ? <p className="mt-2 text-sm text-white/85">{item.description}</p> : null}
@@ -261,11 +261,11 @@ const MediathequePage = () => {
                     className="overflow-hidden rounded-2xl bg-white text-left shadow-sm ring-1 ring-slate-200 transition hover:-translate-y-1"
                     onClick={() => setSelectedVideo(item)}
                   >
-                    <div className="relative h-56 bg-dark">
+                    <div className="relative h-56 bg-slate-900">
                       {thumbnailUrl ? (
                         <img src={thumbnailUrl} alt={item.altText || item.title} className="h-full w-full object-cover opacity-85" />
                       ) : (
-                        <div className="h-full w-full bg-gradient-to-br from-secondary to-dark" />
+                        <div className="h-full w-full bg-gradient-to-br from-secondary via-emerald-500 to-slate-900" />
                       )}
                       <div className="absolute inset-0 flex items-center justify-center">
                         <span className="flex h-16 w-16 items-center justify-center rounded-full bg-primary text-dark shadow-lg">

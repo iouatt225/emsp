@@ -89,7 +89,7 @@ export function getFormationRequirement(formation?: Formation) {
   if (formation.programType === "FS-MENUM" && formation.level === "Licence") {
     return {
       title: "Conditions d'admission Licence FS-MENUM",
-      lines: ["Acces apres BTS, DUT ou equivalent", "Orientation vers les metiers du numerique", `Duree: ${formation.duration}`],
+      lines: ["Acces apres bac, bts ou equivalent", "Orientation vers les metiers du numerique", `Duree: ${formation.duration}`],
     };
   }
   if (formation.programType === "FS-MENUM" && formation.level === "Master") {

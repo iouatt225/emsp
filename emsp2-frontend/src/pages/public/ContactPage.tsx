@@ -75,12 +75,13 @@ const ContactPage = () => {
 
   return (
     <div className="bg-slate-50">
-      <section className="bg-dark py-16 text-white">
+      <section className="bg-[linear-gradient(135deg,#ecfdf5_0%,#ffffff_58%,#fef9c3_100%)] py-16 text-dark">
         <div className="mx-auto max-w-7xl px-4">
-          <p className="text-sm uppercase tracking-[0.28em] text-primary">Contact</p>
-          <h1 className="mt-4 font-display text-4xl font-bold sm:text-5xl">Parlons de votre projet avec l'EMSP</h1>
-          <p className="mt-4 max-w-2xl text-white/85">
-            La page Contact est maintenant pilotee en React avec configuration dynamique et envoi vers l'API Django.
+          <p className="text-sm font-semibold uppercase tracking-[0.28em] text-secondary">Contact</p>
+          <h1 className="mt-4 font-display text-4xl font-bold sm:text-5xl">Prenons contact avec l'EMSP</h1>
+          <p className="mt-4 max-w-2xl text-slate-600">
+            Notre equipe reste a votre disposition pour toute demande d'information, d'inscription, de partenariat ou
+            d'accompagnement institutionnel.
           </p>
         </div>
       </section>
@@ -231,10 +232,11 @@ const ContactPage = () => {
               referrerPolicy="no-referrer-when-downgrade"
             />
           </div>
-          <div className="rounded-3xl bg-dark p-6 text-white shadow-sm">
-            <h2 className="font-display text-2xl font-semibold">Rester connecte</h2>
-            <p className="mt-3 text-sm text-white/80">
-              Retrouve l'EMSP sur ses canaux officiels pour les annonces, evenements et prises de contact.
+          <div className="rounded-3xl border border-emerald-100 bg-[linear-gradient(135deg,#f0fdf4_0%,#ffffff_55%,#fefce8_100%)] p-6 text-dark shadow-sm">
+            <h2 className="font-display text-2xl font-semibold">Nos canaux officiels</h2>
+            <p className="mt-3 text-sm text-slate-600">
+              Consultez nos plateformes officielles pour suivre l'actualite de l'ecole et rester informe de nos
+              annonces institutionnelles.
             </p>
             <div className="mt-6 flex flex-wrap gap-3">
               {socialLinks.map(({ href, label, icon: Icon }) => (
@@ -244,7 +246,9 @@ const ContactPage = () => {
                   target="_blank"
                   rel="noreferrer"
                   className={`inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-semibold ${
-                    href ? "bg-white/10 text-white hover:bg-secondary" : "pointer-events-none bg-white/5 text-white/40"
+                    href
+                      ? "bg-white text-dark ring-1 ring-emerald-100 transition hover:bg-secondary hover:text-white"
+                      : "pointer-events-none bg-white/60 text-slate-400 ring-1 ring-slate-200"
                   }`}
                 >
                   <Icon size={16} />

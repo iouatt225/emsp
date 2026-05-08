@@ -538,46 +538,46 @@ const HomePage = () => {
         </motion.div>
       </section>
 
-      <section className="bg-secondary py-16 text-white">
+      <section className="bg-[linear-gradient(135deg,#f0fdf4_0%,#ffffff_52%,#fefce8_100%)] py-16 text-dark">
         <div className="mx-auto grid max-w-7xl gap-10 px-4 lg:grid-cols-[1fr_0.9fr] lg:items-center">
           <motion.div initial={{ opacity: 0, y: 18 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
-            <span className="text-sm font-semibold uppercase tracking-[0.28em] text-primary">Opportunites</span>
+            <span className="text-sm font-semibold uppercase tracking-[0.28em] text-secondary">Opportunites</span>
             <h2 className="mt-4 font-display text-3xl font-bold leading-tight lg:text-5xl">
               Une institution, des dizaines de debouches pour les talents postaux et numeriques
             </h2>
-            <p className="mt-5 max-w-2xl text-base leading-8 text-white/85">
+            <p className="mt-5 max-w-2xl text-base leading-8 text-slate-600">
               L'EMSP accompagne la transformation des services, la professionnalisation des equipes et l'employabilite des apprenants dans toute la sous-region.
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
               <Link to="/formations" className="rounded-md bg-primary px-5 py-3 font-semibold text-dark">
                 Explorer les formations
               </Link>
-              <Link to="/inscription" className="rounded-md border border-white/70 px-5 py-3 font-semibold text-white">
+              <Link to="/inscription" className="rounded-md border border-secondary/30 bg-white px-5 py-3 font-semibold text-secondary">
                 Deposer une candidature
               </Link>
             </div>
             <div className="mt-8 grid gap-4 sm:grid-cols-3">
-              <div className="rounded-2xl border border-white/15 bg-white/10 p-4 backdrop-blur-sm">
-                <p className="text-sm uppercase tracking-wide text-white/60">Cursus</p>
+              <div className="rounded-2xl border border-emerald-100 bg-white p-4 shadow-sm">
+                <p className="text-sm uppercase tracking-wide text-slate-500">Cursus</p>
                 <p className="mt-2 font-display text-2xl font-bold text-primary">3</p>
-                <p className="mt-1 text-sm text-white/80">grandes familles de programmes</p>
+                <p className="mt-1 text-sm text-slate-600">grandes familles de programmes</p>
               </div>
-              <div className="group/flags relative min-h-[188px] overflow-hidden rounded-2xl border border-white/15 bg-white/10 p-4 backdrop-blur-sm transition duration-300 hover:-translate-y-1 hover:bg-white/15 hover:shadow-[0_24px_50px_-28px_rgba(15,23,42,0.55)]">
-                <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(255,255,255,0.22),transparent_48%)] opacity-0 transition duration-300 group-hover/flags:opacity-100" />
+              <div className="group/flags relative min-h-[188px] overflow-hidden rounded-2xl border border-emerald-100 bg-white p-4 shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-[0_24px_50px_-28px_rgba(15,23,42,0.18)]">
+                <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(34,197,94,0.16),transparent_48%)] opacity-0 transition duration-300 group-hover/flags:opacity-100" />
                 <div className="relative z-10 transition duration-300 group-hover/flags:-translate-y-5 group-hover/flags:opacity-0">
-                  <p className="text-sm uppercase tracking-wide text-white/60">Portee</p>
+                  <p className="text-sm uppercase tracking-wide text-slate-500">Portee</p>
                   <p className="mt-2 font-display text-2xl font-bold text-primary">8</p>
-                  <p className="mt-1 text-sm text-white/80">pays membres relies par l'ecole</p>
-                  <p className="mt-5 text-xs uppercase tracking-[0.28em] text-white/45">Survolez pour explorer</p>
+                  <p className="mt-1 text-sm text-slate-600">pays membres relies par l'ecole</p>
+                  <p className="mt-5 text-xs uppercase tracking-[0.28em] text-slate-400">Survolez pour explorer</p>
                 </div>
                 <div className="pointer-events-none absolute inset-0 z-10 p-3 opacity-0 transition duration-300 group-hover/flags:opacity-100">
-                  <div className="rounded-[22px] border border-white/12 bg-dark/20 p-3 backdrop-blur-sm">
+                  <div className="rounded-[22px] border border-emerald-100 bg-[linear-gradient(135deg,#f0fdf4_0%,#ffffff_55%,#fefce8_100%)] p-3 shadow-sm">
                     <div className="flex items-center justify-between gap-3">
                       <div>
-                        <p className="text-[11px] font-semibold uppercase tracking-[0.3em] text-primary/90">Reseau EMSP</p>
-                        <p className="mt-1 text-sm font-semibold text-white">8 pays membres</p>
+                        <p className="text-[11px] font-semibold uppercase tracking-[0.3em] text-secondary">Reseau EMSP</p>
+                        <p className="mt-1 text-sm font-semibold text-dark">8 pays membres</p>
                       </div>
-                      <div className="rounded-full border border-white/15 bg-white/10 px-2.5 py-1 text-[11px] font-semibold text-white/80">
+                      <div className="rounded-full border border-secondary/15 bg-white px-2.5 py-1 text-[11px] font-semibold text-slate-500">
                         UPU
                       </div>
                     </div>
@@ -585,27 +585,27 @@ const HomePage = () => {
                       {memberCountries.map((country, index) => (
                         <div
                           key={country.id}
-                          className="flex translate-y-2 items-center gap-2 rounded-xl border border-white/10 bg-white/10 px-2 py-2 opacity-0 transition duration-300 group-hover/flags:translate-y-0 group-hover/flags:opacity-100"
+                          className="flex translate-y-2 items-center gap-2 rounded-xl border border-emerald-100 bg-white px-2 py-2 opacity-0 transition duration-300 group-hover/flags:translate-y-0 group-hover/flags:opacity-100"
                           style={{ transitionDelay: `${60 + index * 35}ms` }}
                         >
                           {country.url ? (
                             <img src={country.url} alt={country.altText} className="h-8 w-10 rounded-lg object-cover shadow-sm" />
                           ) : (
-                            <div className="flex h-8 w-10 items-center justify-center rounded-lg bg-white/15 text-[10px] font-semibold uppercase text-white/80">
+                            <div className="flex h-8 w-10 items-center justify-center rounded-lg bg-slate-100 text-[10px] font-semibold uppercase text-slate-500">
                               {country.name.slice(0, 2)}
                             </div>
                           )}
-                          <span className="text-[11px] font-medium leading-4 text-white/90">{country.name}</span>
+                          <span className="text-[11px] font-medium leading-4 text-dark">{country.name}</span>
                         </div>
                       ))}
                     </div>
                   </div>
                 </div>
               </div>
-              <div className="rounded-2xl border border-white/15 bg-white/10 p-4 backdrop-blur-sm">
-                <p className="text-sm uppercase tracking-wide text-white/60">Impact</p>
+              <div className="rounded-2xl border border-emerald-100 bg-white p-4 shadow-sm">
+                <p className="text-sm uppercase tracking-wide text-slate-500">Impact</p>
                 <p className="mt-2 font-display text-2xl font-bold text-primary">50+</p>
-                <p className="mt-1 text-sm text-white/80">annees de transmission d'expertise</p>
+                <p className="mt-1 text-sm text-slate-600">annees de transmission d'expertise</p>
               </div>
             </div>
           </motion.div>
@@ -613,7 +613,7 @@ const HomePage = () => {
             <img
               src={promoImage.url}
               alt={promoImage.altText || promoImage.title}
-              className="h-full min-h-[320px] w-full rounded-[32px] border border-white/10 object-cover shadow-[0_30px_80px_-35px_rgba(0,0,0,0.55)]"
+              className="h-full min-h-[320px] w-full rounded-[32px] border border-white object-cover shadow-[0_30px_80px_-35px_rgba(15,23,42,0.3)]"
             />
           </motion.div>
         </div>

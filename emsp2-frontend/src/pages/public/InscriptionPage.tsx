@@ -395,13 +395,13 @@ const InscriptionPage = () => {
 
   return (
     <div className="bg-slate-50">
-      <section className="bg-dark py-16 text-white">
+      <section className="bg-[linear-gradient(135deg,#ecfdf5_0%,#ffffff_58%,#fef9c3_100%)] py-16 text-dark">
         <div className="mx-auto max-w-7xl px-4">
-          <p className="text-sm uppercase tracking-[0.28em] text-primary">Inscription</p>
+          <p className="text-sm font-semibold uppercase tracking-[0.28em] text-secondary">Inscription</p>
           <h1 className="mt-4 max-w-4xl font-display text-4xl font-bold sm:text-5xl">
             Deposez votre candidature EMSP en quelques etapes
           </h1>
-          <p className="mt-4 max-w-2xl text-white/85">
+          <p className="mt-4 max-w-2xl text-slate-600">
             Remplissez le formulaire ci-dessous pour soumettre votre candidature à l'EMSP. Assurez-vous de fournir des informations exactes et de joindre tous les documents requis pour maximiser vos chances d'admission.
           </p>
         </div>
