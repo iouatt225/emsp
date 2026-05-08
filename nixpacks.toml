@@ -1,8 +1,6 @@
-providers = ["python", "node"]
-
 [phases.setup]
 nixPkgs = [
-  "python311",
+  "...",
   "nodejs_20",
   "pkg-config",
   "pango",
@@ -11,18 +9,17 @@ nixPkgs = [
   "libffi",
 ]
 
-[phases.install]
-cmds = [
-  "python -m pip install --upgrade pip",
-  "python -m pip install -r requirements.txt",
-  "cd emsp2-frontend && npm ci",
-]
+[phases.frontend_install]
+dependsOn = ["install"]
+cmds = ["cd emsp2-frontend && npm ci"]
 
-[phases.build]
-cmds = [
-  "cd emsp2-frontend && npm run build",
-  "python manage.py collectstatic --noinput",
-]
+[phases.frontend_build]
+dependsOn = ["frontend_install"]
+cmds = ["cd emsp2-frontend && npm run build"]
+
+[phases.collectstatic]
+dependsOn = ["frontend_build"]
+cmds = ["python manage.py collectstatic --noinput"]
 
 [start]
 cmd = "python manage.py migrate && gunicorn emsp1.wsgi:application --bind 0.0.0.0:$PORT"

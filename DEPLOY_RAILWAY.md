@@ -48,7 +48,8 @@ python -c "from django.core.management.utils import get_random_secret_key; print
 
 Railway utilisera `nixpacks.toml` :
 
-- installation Python + Node
+- installation par defaut du provider Python de Nixpacks
+- ajout de Node + bibliotheques systeme necessaires
 - `pip install -r requirements.txt`
 - `cd emsp2-frontend && npm ci`
 - `cd emsp2-frontend && npm run build`
@@ -97,4 +98,3 @@ En mode proche production :
 ```bash
 DEBUG=False DATABASE_URL=sqlite:///db.sqlite3 ALLOWED_HOSTS=localhost,127.0.0.1 python manage.py check
 ```
-
