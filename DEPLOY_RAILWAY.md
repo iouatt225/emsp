@@ -48,7 +48,7 @@ python -c "from django.core.management.utils import get_random_secret_key; print
 
 Railway utilisera `nixpacks.toml` :
 
-- installation par defaut du provider Python de Nixpacks
+- utilisation exclusive du provider Python de Nixpacks
 - ajout de Node + bibliotheques systeme necessaires
 - `pip install -r requirements.txt`
 - `cd emsp2-frontend && npm ci`
