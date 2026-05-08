@@ -23,7 +23,3 @@ application = ProtocolTypeRouter(
         "websocket": URLRouter(websocket_urlpatterns),
     }
 )
-
-from apps.scolarite.demo import ensure_admin_bootstrap_data_on_startup
-
-ensure_admin_bootstrap_data_on_startup()

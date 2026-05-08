@@ -14,7 +14,3 @@ from django.core.wsgi import get_wsgi_application
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'emsp1.settings')
 
 application = get_wsgi_application()
-
-from apps.scolarite.demo import ensure_admin_bootstrap_data_on_startup
-
-ensure_admin_bootstrap_data_on_startup()
