@@ -12,7 +12,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from apps.accounts.permissions import IsAdminFamily, IsFullAdminAccess, IsStudent
+from apps.accounts.permissions import IsAdminFamily, IsDriver, IsFullAdminAccess, IsStudent
 from apps.actualites.models import Article
 from apps.actualites.serializers import ArticleListSerializer
 from apps.comptabilite.models import Paiement
@@ -20,6 +20,7 @@ from apps.formations.models import Filiere
 from apps.inscriptions.models import Candidature
 
 from .demo import ensure_portal_demo_data
+from .dashboard_visuals import build_advanced_dashboard_payload
 from .models import (
     EmploiDuTempsItem,
     Enseignant,
@@ -958,6 +959,17 @@ class AdminTransportCarApiView(APIView):
         return Response(TransportCarSerializer(car).data, status=status.HTTP_201_CREATED)
 
 
+class AdminTransportCarDetailApiView(APIView):
+    permission_classes = [IsAuthenticated, IsAdminFamily]
+
+    def delete(self, request, pk):
+        car = TransportCar.objects.filter(pk=pk).first()
+        if car is None:
+            raise NotFound("Car introuvable.")
+        car.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+
 class AdminTransportDriverApiView(APIView):
     permission_classes = [IsAuthenticated, IsAdminFamily]
 
@@ -1002,7 +1014,7 @@ class AdminTransportDriverApiView(APIView):
 
 
 class DriverTripApiView(APIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, IsDriver]
 
     def get_driver(self, request):
         driver = TransportDriver.objects.select_related("car", "car__route").filter(user=request.user).first()
@@ -1081,6 +1093,10 @@ class AdminDashboardApiView(APIView):
                         {"label": "Juin", "paid": 0, "due": 0},
                     ],
                     "latest_inscriptions": latest_inscriptions,
+                    "advanced": build_advanced_dashboard_payload(
+                        "legacy",
+                        legacy_results=legacy_payload["results"],
+                    ),
                 }
             )
 
@@ -1161,6 +1177,7 @@ class AdminDashboardApiView(APIView):
                 "yearly_enrolments": evolution,
                 "monthly_finance": monthly_finance,
                 "latest_inscriptions": latest_inscriptions,
+                "advanced": build_advanced_dashboard_payload("portal", students=students),
             }
         )
 

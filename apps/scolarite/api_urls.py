@@ -4,6 +4,7 @@ from django.urls import path
 from .api_views import (
     AdminAcademicOverviewApiView,
     AdminDashboardApiView,
+    AdminTransportCarDetailApiView,
     DashboardEmploiDuTempsDetailApiView,
     DashboardEmploiDuTempsListCreateApiView,
     DashboardPromotionDetailApiView,
@@ -70,6 +71,7 @@ urlpatterns = [
     path("admin/transport/communes/", AdminTransportCommuneApiView.as_view(), name="admin_transport_communes"),
     path("admin/transport/routes/", AdminTransportRouteApiView.as_view(), name="admin_transport_routes"),
     path("admin/transport/cars/", AdminTransportCarApiView.as_view(), name="admin_transport_cars"),
+    path("admin/transport/cars/<int:pk>/", AdminTransportCarDetailApiView.as_view(), name="admin_transport_cars_detail"),
     path("admin/transport/drivers/", AdminTransportDriverApiView.as_view(), name="admin_transport_drivers"),
     path("admin/enseignants/", AdminEnseignantListCreateApiView.as_view(), name="admin_teachers"),
     path("admin/enseignants/<int:pk>/", AdminEnseignantDetailApiView.as_view(), name="admin_teachers_detail"),

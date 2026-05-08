@@ -1,5 +1,6 @@
 import { Clock3, Receipt, Search, TrendingUp, Wallet } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 
 import AdminMetricCard from "../../../components/dashboard/AdminMetricCard";
 import AdminPageHeader from "../../../components/dashboard/AdminPageHeader";
@@ -22,8 +23,11 @@ const operatorLabel: Record<string, string> = {
 };
 
 const AdminAccountingPage = () => {
-  const [search, setSearch] = useState("");
-  const [status, setStatus] = useState<"" | "pending" | "confirmed" | "failed" | "refunded">("");
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [search, setSearch] = useState(searchParams.get("search") || "");
+  const [status, setStatus] = useState<"" | "pending" | "confirmed" | "failed" | "refunded">(
+    (searchParams.get("status") as "" | "pending" | "confirmed" | "failed" | "refunded") || "",
+  );
   const [operator, setOperator] = useState<"" | "orange" | "mtn" | "wave">("");
 
   const { data: finance } = useFinanceSummary();
@@ -32,6 +36,35 @@ const AdminAccountingPage = () => {
     status: status || undefined,
     operator: operator || undefined,
   });
+
+  useEffect(() => {
+    setSearch(searchParams.get("search") || "");
+    setStatus((searchParams.get("status") as "" | "pending" | "confirmed" | "failed" | "refunded") || "");
+  }, [searchParams]);
+
+  useEffect(() => {
+    const nextParams = new URLSearchParams(searchParams);
+    const currentSearch = searchParams.get("search") || "";
+    const currentStatus = (searchParams.get("status") as "" | "pending" | "confirmed" | "failed" | "refunded") || "";
+
+    if (currentSearch === search && currentStatus === status) {
+      return;
+    }
+
+    if (search) {
+      nextParams.set("search", search);
+    } else {
+      nextParams.delete("search");
+    }
+
+    if (status) {
+      nextParams.set("status", status);
+    } else {
+      nextParams.delete("status");
+    }
+
+    setSearchParams(nextParams, { replace: true });
+  }, [search, searchParams, setSearchParams, status]);
 
   if (isLoading || !data) {
     return <div className="h-96 animate-pulse rounded-3xl bg-white" />;
@@ -156,7 +189,7 @@ const AdminAccountingPage = () => {
                     <td className="px-5 py-4 text-slate-600">
                       <p className="font-medium text-dark">{payment.studentName}</p>
                       <p className="text-xs text-slate-500">
-                        {payment.matricule} • {payment.studentCountry}
+                        {payment.matricule} - {payment.studentCountry}
                       </p>
                     </td>
                     <td className="px-5 py-4 text-slate-600">{payment.formationName}</td>

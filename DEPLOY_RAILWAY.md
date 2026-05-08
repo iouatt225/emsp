@@ -73,8 +73,14 @@ Railway utilisera `nixpacks.toml` :
 Commande de demarrage :
 
 ```bash
-python manage.py migrate && gunicorn emsp1.wsgi:application --bind 0.0.0.0:$PORT
+python manage.py migrate && uvicorn emsp1.asgi:application --host 0.0.0.0 --port $PORT --proxy-headers
 ```
+
+Important pour les WebSockets :
+
+- Railway supporte les WebSockets via HTTP/1.1, donc aucune option speciale supplementaire n'est necessaire tant que l'application ecoute sur `0.0.0.0:$PORT`.
+- Les connexions longues sont coupees au bout de 15 minutes sur Railway : le client dashboard doit donc se reconnecter automatiquement.
+- Le flux temps reel du dashboard admin utilise maintenant `emsp1.asgi:application`, donc il ne faut plus demarrer le projet avec `emsp1.wsgi:application`.
 
 ## 5. Apres premier deploiement
 

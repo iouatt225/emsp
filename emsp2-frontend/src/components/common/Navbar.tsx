@@ -6,6 +6,7 @@ import { Link, NavLink } from "react-router-dom";
 import MegaMenu from "./MegaMenu";
 import { navigationConfig } from "../../config/navigation";
 import { limitedAdminRoles, staticAdminDashboardPath } from "../../config/adminPortal";
+import { getUserHomePath } from "../../config/portalAccess";
 import { useAuth } from "../../hooks/useAuth";
 import { useSiteConfig } from "../../hooks/useSiteConfig";
 
@@ -17,12 +18,13 @@ const Navbar = () => {
   const { data: site } = useSiteConfig();
   const { user, isAuthenticated } = useAuth();
 
-  const portalHref = !isAuthenticated ? "/login" : user?.role === "etudiant" ? "/etudiant/dashboard" : staticAdminDashboardPath;
+  const portalHref = !isAuthenticated ? "/login" : getUserHomePath(user?.role);
   const adminHref = !isAuthenticated
     ? "/login"
     : limitedAdminRoles.includes((user?.role || "etudiant") as (typeof limitedAdminRoles)[number])
       ? staticAdminDashboardPath
-      : "/etudiant/dashboard";
+      : getUserHomePath(user?.role);
+  const portalLabel = user?.role === "chauffeur" ? "Espace Chauffeur" : "Espace Etudiant";
 
   useEffect(() => {
     const onScroll = () => setIsSticky(window.scrollY > 80);
@@ -87,7 +89,7 @@ const Navbar = () => {
             href={portalHref}
             className="rounded-md bg-secondary px-4 py-2 text-sm font-semibold text-white transition hover:bg-emerald-600"
           >
-            Espace Etudiant
+            {portalLabel}
           </a>
           <a
             href={adminHref}
@@ -187,7 +189,7 @@ const Navbar = () => {
                   className="block rounded-md bg-white px-4 py-2 text-center text-sm font-semibold text-secondary"
                   onClick={() => setMobileOpen(false)}
                 >
-                  Espace Etudiant
+                  {portalLabel}
                 </a>
                 <a
                   href={adminHref}

@@ -1,5 +1,6 @@
 import { CheckCircle2, Clock3, FileCheck2, FileText, Search, XCircle } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 
 import AdminMetricCard from "../../../components/dashboard/AdminMetricCard";
 import AdminPageHeader from "../../../components/dashboard/AdminPageHeader";
@@ -40,8 +41,11 @@ const getErrorMessage = (error: unknown, fallback: string) => {
 };
 
 const AdminApplicationsPage = () => {
-  const [search, setSearch] = useState("");
-  const [status, setStatus] = useState<"" | "submitted" | "under_review" | "accepted" | "rejected">("");
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [search, setSearch] = useState(searchParams.get("search") || "");
+  const [status, setStatus] = useState<"" | "submitted" | "under_review" | "accepted" | "rejected">(
+    (searchParams.get("status") as "" | "submitted" | "under_review" | "accepted" | "rejected") || "",
+  );
   const [selectedApplicationId, setSelectedApplicationId] = useState<number>();
   const [feedback, setFeedback] = useState<{ type: "success" | "error"; text: string } | null>(null);
 
@@ -51,6 +55,35 @@ const AdminApplicationsPage = () => {
   });
   const { data: applicationDetail, isLoading: isDetailLoading } = useAdminApplicationDetail(selectedApplicationId);
   const updateStatusMutation = useUpdateAdminApplicationStatus();
+
+  useEffect(() => {
+    setSearch(searchParams.get("search") || "");
+    setStatus((searchParams.get("status") as "" | "submitted" | "under_review" | "accepted" | "rejected") || "");
+  }, [searchParams]);
+
+  useEffect(() => {
+    const nextParams = new URLSearchParams(searchParams);
+    const currentSearch = searchParams.get("search") || "";
+    const currentStatus = (searchParams.get("status") as "" | "submitted" | "under_review" | "accepted" | "rejected") || "";
+
+    if (currentSearch === search && currentStatus === status) {
+      return;
+    }
+
+    if (search) {
+      nextParams.set("search", search);
+    } else {
+      nextParams.delete("search");
+    }
+
+    if (status) {
+      nextParams.set("status", status);
+    } else {
+      nextParams.delete("status");
+    }
+
+    setSearchParams(nextParams, { replace: true });
+  }, [search, searchParams, setSearchParams, status]);
 
   useEffect(() => {
     if (!data?.results.length) {

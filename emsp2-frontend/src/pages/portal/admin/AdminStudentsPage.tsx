@@ -1,5 +1,6 @@
 import { CheckCircle2, GraduationCap, Pencil, Plus, Save, Search, ShieldAlert, Users, Wallet } from "lucide-react";
 import { FormEvent, useEffect, useMemo, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 
 import AdminMetricCard from "../../../components/dashboard/AdminMetricCard";
 import AdminPageHeader from "../../../components/dashboard/AdminPageHeader";
@@ -75,7 +76,8 @@ const getErrorMessage = (error: unknown, fallback: string) => {
 };
 
 const AdminStudentsPage = () => {
-  const [search, setSearch] = useState("");
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [search, setSearch] = useState(searchParams.get("search") || "");
   const [status, setStatus] = useState<"" | "active" | "inactive">("");
   const [country, setCountry] = useState("");
   const [formation, setFormation] = useState("");
@@ -106,6 +108,24 @@ const AdminStudentsPage = () => {
       options?.promotions.filter((promotion) => !portalForm.formationId || promotion.formationId === portalForm.formationId) || [],
     [options?.promotions, portalForm.formationId],
   );
+
+  useEffect(() => {
+    setSearch(searchParams.get("search") || "");
+  }, [searchParams]);
+
+  useEffect(() => {
+    const nextParams = new URLSearchParams(searchParams);
+    const currentSearch = searchParams.get("search") || "";
+    if (currentSearch === search) {
+      return;
+    }
+    if (search) {
+      nextParams.set("search", search);
+    } else {
+      nextParams.delete("search");
+    }
+    setSearchParams(nextParams, { replace: true });
+  }, [search, searchParams, setSearchParams]);
 
   useEffect(() => {
     if (!editingStudent) {

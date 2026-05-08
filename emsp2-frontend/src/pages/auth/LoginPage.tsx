@@ -3,6 +3,7 @@ import { FormEvent, useEffect, useMemo, useState } from "react";
 import { Link, Navigate, useLocation, useNavigate } from "react-router-dom";
 
 import { canAccessAdminPath, staticAdminDashboardPath } from "../../config/adminPortal";
+import { driverHomePath, getUserHomePath, isAdminFamilyRole } from "../../config/portalAccess";
 import { useAuth } from "../../hooks/useAuth";
 import { useSiteConfig } from "../../hooks/useSiteConfig";
 
@@ -25,8 +26,12 @@ const LoginPage = () => {
 
   useEffect(() => {
     if (isAuthenticated && user) {
-      if (user.role !== "etudiant") {
+      if (isAdminFamilyRole(user.role)) {
         window.location.replace(staticAdminDashboardPath);
+        return;
+      }
+      if (user.role === "chauffeur") {
+        window.location.replace(driverHomePath);
         return;
       }
       if (redirectTarget && canAccessAdminPath(user.role, redirectTarget)) {
@@ -44,14 +49,18 @@ const LoginPage = () => {
 
     try {
       const loggedUser = await login({ email, password });
-      if (loggedUser.role !== "etudiant") {
+      if (isAdminFamilyRole(loggedUser.role)) {
         window.location.href = staticAdminDashboardPath;
+        return;
+      }
+      if (loggedUser.role === "chauffeur") {
+        window.location.href = driverHomePath;
         return;
       }
       const nextPath =
         redirectTarget && canAccessAdminPath(loggedUser.role, redirectTarget)
           ? redirectTarget
-          : "/etudiant/dashboard";
+          : getUserHomePath(loggedUser.role);
       navigate(nextPath, { replace: true });
     } catch (err: unknown) {
       const detail =
@@ -65,7 +74,7 @@ const LoginPage = () => {
   };
 
   if (isAuthenticated && user) {
-    if (user.role !== "etudiant") {
+    if (isAdminFamilyRole(user.role) || user.role === "chauffeur") {
       return null;
     }
     return <Navigate to="/etudiant/dashboard" replace />;

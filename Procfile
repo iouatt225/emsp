@@ -1,1 +1,1 @@
-web: python manage.py migrate && python manage.py collectstatic --noinput && gunicorn emsp1.wsgi:application --bind 0.0.0.0:$PORT
+web: python manage.py migrate && uvicorn emsp1.asgi:application --host 0.0.0.0 --port $PORT --proxy-headers

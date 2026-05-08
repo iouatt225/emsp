@@ -9,6 +9,7 @@ const LABELS: Record<string, string> = {
   login: "Connexion",
   register: "Inscription portail",
   etudiant: "Portail etudiant",
+  chauffeur: "Portail chauffeur",
   admin: "Administration",
   dashboard: "Tableau de bord",
   notes: "Notes",

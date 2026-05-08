@@ -7,6 +7,7 @@ export const useAuth = () => {
   const login = useAuthStore((state) => state.login);
   const logout = useAuthStore((state) => state.logout);
   const hydrate = useAuthStore((state) => state.hydrate);
+  const setUser = useAuthStore((state) => state.setUser);
 
   return {
     user,
@@ -15,5 +16,6 @@ export const useAuth = () => {
     login,
     logout,
     hydrate,
+    setUser,
   };
 };

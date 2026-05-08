@@ -8,6 +8,7 @@ from rest_framework.views import APIView
 from rest_framework_simplejwt.views import TokenRefreshView
 
 from apps.accounts.permissions import IsFullAdminAccess
+from apps.mediatheque.models import MediaItem
 from apps.scolarite.demo import ensure_admin_bootstrap_data, ensure_portal_demo_data
 
 from .serializers import LoginSerializer, UserSerializer
@@ -37,6 +38,71 @@ class CurrentUserApiView(APIView):
     def get(self, request):
         serializer = UserSerializer(request.user, context={"request": request})
         return Response(serializer.data)
+
+    def patch(self, request):
+        serializer = CurrentUserUpdateSerializer(
+            data=request.data,
+            context={"request": request, "user": request.user},
+            partial=True,
+        )
+        serializer.is_valid(raise_exception=True)
+        user = request.user
+        previous_avatar = user.avatar
+        data = serializer.validated_data
+
+        for field in ["username", "email", "first_name", "last_name", "phone"]:
+            if field in data:
+                setattr(user, field, data[field])
+
+        remove_avatar = data.get("remove_avatar", False)
+        avatar_file = data.get("avatar")
+
+        if remove_avatar:
+            user.avatar = None
+
+        if avatar_file:
+            avatar_item = MediaItem.objects.create(
+                title=f"avatar-{user.username or user.pk}",
+                alt_text=user.full_name,
+                type="image",
+                category="account-avatar",
+                file=avatar_file,
+                is_active=True,
+            )
+            user.avatar = avatar_item
+
+        user.save()
+
+        if previous_avatar and previous_avatar != user.avatar and previous_avatar.category == "account-avatar":
+            previous_avatar.delete()
+
+        return Response(UserSerializer(user, context={"request": request}).data)
+
+
+class CurrentUserUpdateSerializer(serializers.Serializer):
+    username = serializers.CharField(required=False, allow_blank=True, max_length=150)
+    email = serializers.EmailField(required=False)
+    first_name = serializers.CharField(required=False, allow_blank=True, max_length=150)
+    last_name = serializers.CharField(required=False, allow_blank=True, max_length=150)
+    phone = serializers.CharField(required=False, allow_blank=True, max_length=20)
+    avatar = serializers.FileField(required=False)
+    remove_avatar = serializers.BooleanField(required=False)
+
+    def validate_username(self, value):
+        username = value.strip()
+        user = self.context["user"]
+        if not username:
+            raise serializers.ValidationError("Le nom d'utilisateur est requis.")
+        if User.objects.filter(username__iexact=username).exclude(pk=user.pk).exists():
+            raise serializers.ValidationError("Ce nom d'utilisateur est deja utilise.")
+        return username
+
+    def validate_email(self, value):
+        email = value.strip().lower()
+        user = self.context["user"]
+        if User.objects.filter(email__iexact=email).exclude(pk=user.pk).exists():
+            raise serializers.ValidationError("Un utilisateur existe deja avec cet email.")
+        return email
 
 
 class AdminUserWriteSerializer(serializers.Serializer):

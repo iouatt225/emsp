@@ -2,6 +2,7 @@ import { Clock3, GraduationCap, TrendingUp, Users } from "lucide-react";
 import { Link } from "react-router-dom";
 
 import AdminPageHeader from "../../../components/dashboard/AdminPageHeader";
+import AdvancedDashboardCharts from "../../../components/dashboard/AdvancedDashboardCharts";
 import SurfaceCard from "../../../components/dashboard/SurfaceCard";
 import { getVisibleAdminPortalItems } from "../../../config/adminPortal";
 import { useAuth } from "../../../hooks/useAuth";
@@ -158,6 +159,17 @@ const AdminDashboardPage = () => {
             </div>
           ) : null}
         </SurfaceCard>
+      </div>
+
+      <div className="space-y-4">
+        <div>
+          <p className="text-sm uppercase tracking-[0.24em] text-secondary">Analyse avancee</p>
+          <h2 className="mt-2 font-display text-2xl font-bold text-dark">Visualisations immersives du campus</h2>
+          <p className="mt-2 max-w-4xl text-sm leading-6 text-slate-600">
+            Vue relationnelle 3D, exploration hierarchique, globe interactif et flux temps reel pour un pilotage plus vivant.
+          </p>
+        </div>
+        <AdvancedDashboardCharts advanced={data.advanced} />
       </div>
 
       <SurfaceCard className="emsp-panel p-6">

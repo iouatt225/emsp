@@ -24,4 +24,4 @@ dependsOn = ["frontend_build"]
 cmds = ["python manage.py collectstatic --noinput"]
 
 [start]
-cmd = "python manage.py migrate && gunicorn emsp1.wsgi:application --bind 0.0.0.0:$PORT"
+cmd = "python manage.py migrate && uvicorn emsp1.asgi:application --host 0.0.0.0 --port $PORT --proxy-headers"

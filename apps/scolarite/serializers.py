@@ -214,6 +214,7 @@ class TransportDriverSerializer(serializers.ModelSerializer):
     full_name = serializers.CharField(source="user.full_name", read_only=True)
     email = serializers.EmailField(source="user.email", read_only=True)
     car_label = serializers.CharField(source="car.label", read_only=True, default="")
+    route_label = serializers.CharField(source="car.route.label", read_only=True, default="")
 
     class Meta:
         model = TransportDriver
@@ -224,6 +225,7 @@ class TransportDriverSerializer(serializers.ModelSerializer):
             "email",
             "car",
             "car_label",
+            "route_label",
             "phone",
             "license_number",
             "is_active",

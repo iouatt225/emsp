@@ -6,6 +6,7 @@ import ProtectedRoute from "./components/common/ProtectedRoute";
 import { getAdminHomePath, fullAdminRoles, limitedAdminRoles } from "./config/adminPortal";
 import { useAuth } from "./hooks/useAuth";
 import AdminPortalLayout from "./layouts/portal/AdminPortalLayout";
+import DriverPortalLayout from "./layouts/portal/DriverPortalLayout";
 import StudentPortalLayout from "./layouts/portal/StudentPortalLayout";
 import LoginPage from "./pages/auth/LoginPage";
 import RegisterPortalPage from "./pages/auth/RegisterPortalPage";
@@ -31,6 +32,7 @@ const AdminStatisticsPage = lazy(() => import("./pages/portal/admin/AdminStatist
 const AdminStudentsPage = lazy(() => import("./pages/portal/admin/AdminStudentsPage"));
 const AdminTeachersPage = lazy(() => import("./pages/portal/admin/AdminTeachersPage"));
 const AdminTransportPage = lazy(() => import("./pages/portal/admin/AdminTransportPage"));
+const DriverTransportPage = lazy(() => import("./pages/portal/driver/DriverTransportPage"));
 const StudentDashboardPage = lazy(() => import("./pages/portal/student/StudentDashboardPage"));
 const StudentDocumentsPage = lazy(() => import("./pages/portal/student/StudentDocumentsPage"));
 const StudentForumPage = lazy(() => import("./pages/portal/student/StudentForumPage"));
@@ -91,6 +93,13 @@ function App() {
           <Route path="profil" element={<Suspense fallback={<PortalFallback />}><StudentProfilePage /></Suspense>} />
           <Route path="forum" element={<Navigate to="/etudiant/communaute" replace />} />
           <Route path="stages" element={<Suspense fallback={<PortalFallback />}><StudentStagesPage /></Suspense>} />
+        </Route>
+      </Route>
+
+      <Route element={<ProtectedRoute allowedRoles={["chauffeur"]} />}>
+        <Route path="/chauffeur" element={<DriverPortalLayout />}>
+          <Route index element={<Navigate to="/chauffeur/transport" replace />} />
+          <Route path="transport" element={<Suspense fallback={<PortalFallback />}><DriverTransportPage /></Suspense>} />
         </Route>
       </Route>
 

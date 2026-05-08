@@ -1,5 +1,6 @@
 import { CheckCircle2, Clock3, FileText, Pencil, Plus, Save, Search, Tags, Trash2, X } from "lucide-react";
-import { FormEvent, useMemo, useState } from "react";
+import { FormEvent, useEffect, useMemo, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 
 import AdminMetricCard from "../../../components/dashboard/AdminMetricCard";
 import AdminPageHeader from "../../../components/dashboard/AdminPageHeader";
@@ -86,7 +87,8 @@ const MediaPreview = ({ article }: { article: AdminNewsArticle }) => {
 };
 
 const AdminNewsPage = () => {
-  const [search, setSearch] = useState("");
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [search, setSearch] = useState(searchParams.get("search") || "");
   const [status, setStatus] = useState<"" | "published" | "draft">("");
   const [form, setForm] = useState<NewsFormState>(emptyForm);
   const [editingArticle, setEditingArticle] = useState<AdminNewsArticle | null>(null);
@@ -103,6 +105,24 @@ const AdminNewsPage = () => {
   const createNewsMutation = useCreateAdminNews();
   const updateNewsMutation = useUpdateAdminNews();
   const deleteNewsMutation = useDeleteAdminNews();
+
+  useEffect(() => {
+    setSearch(searchParams.get("search") || "");
+  }, [searchParams]);
+
+  useEffect(() => {
+    const nextParams = new URLSearchParams(searchParams);
+    const currentSearch = searchParams.get("search") || "";
+    if (currentSearch === search) {
+      return;
+    }
+    if (search) {
+      nextParams.set("search", search);
+    } else {
+      nextParams.delete("search");
+    }
+    setSearchParams(nextParams, { replace: true });
+  }, [search, searchParams, setSearchParams]);
 
   const coverOptions = useMemo(
     () => mediaItems.filter((item) => item.type === "image" || item.type === "video"),

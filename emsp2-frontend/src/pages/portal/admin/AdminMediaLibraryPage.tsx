@@ -1,5 +1,6 @@
 import { CheckCircle2, FileText, Image as ImageIcon, Pencil, PlayCircle, Save, Search, Shapes, Trash2, UploadCloud, X } from "lucide-react";
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 
 import AdminMetricCard from "../../../components/dashboard/AdminMetricCard";
 import AdminPageHeader from "../../../components/dashboard/AdminPageHeader";
@@ -39,7 +40,8 @@ const initialMediaForm: AdminMediaPayload = {
 };
 
 const AdminMediaLibraryPage = () => {
-  const [search, setSearch] = useState("");
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [search, setSearch] = useState(searchParams.get("search") || "");
   const [type, setType] = useState<"" | "image" | "video" | "document">("");
   const [category, setCategory] = useState("");
   const [mediaForm, setMediaForm] = useState<AdminMediaPayload>(initialMediaForm);
@@ -55,6 +57,24 @@ const AdminMediaLibraryPage = () => {
   const createMediaMutation = useCreateAdminMedia();
   const updateMediaMutation = useUpdateAdminMedia();
   const deleteMediaMutation = useDeleteAdminMedia();
+
+  useEffect(() => {
+    setSearch(searchParams.get("search") || "");
+  }, [searchParams]);
+
+  useEffect(() => {
+    const nextParams = new URLSearchParams(searchParams);
+    const currentSearch = searchParams.get("search") || "";
+    if (currentSearch === search) {
+      return;
+    }
+    if (search) {
+      nextParams.set("search", search);
+    } else {
+      nextParams.delete("search");
+    }
+    setSearchParams(nextParams, { replace: true });
+  }, [search, searchParams, setSearchParams]);
 
   const handleMediaFieldChange = <K extends keyof AdminMediaPayload>(field: K, value: AdminMediaPayload[K]) => {
     setFeedback("");

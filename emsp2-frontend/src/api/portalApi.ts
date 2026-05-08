@@ -183,6 +183,72 @@ interface RawAdminDashboard {
     matricule: string;
     photo_url?: string;
   }>;
+  advanced: {
+    force_graph: {
+      nodes: Array<{
+        id: string;
+        name: string;
+        type: string;
+        value: number;
+        color: string;
+      }>;
+      links: Array<{
+        source: string;
+        target: string;
+        value: number;
+      }>;
+    };
+    sunburst: {
+      name: string;
+      children?: Array<{
+        name: string;
+        value?: number;
+        children?: Array<{
+          name: string;
+          value?: number;
+          children?: Array<{
+            name: string;
+            value?: number;
+          }>;
+        }>;
+      }>;
+    };
+    globe: {
+      hub: {
+        name: string;
+        city: string;
+        lat: number;
+        lng: number;
+      };
+      nodes: Array<{
+        name: string;
+        city: string;
+        lat: number;
+        lng: number;
+        value: number;
+        kind: "hub" | "country";
+      }>;
+      arcs: Array<{
+        from_name: string;
+        to_name: string;
+        from_lat: number;
+        from_lng: number;
+        to_lat: number;
+        to_lng: number;
+        value: number;
+        students: number;
+        candidatures: number;
+      }>;
+    };
+    stream_seed: Array<{
+      timestamp: string;
+      label: string;
+      revenue: number;
+      pending_payments: number;
+      pending_applications: number;
+      active_students: number;
+    }>;
+  };
 }
 
 interface RawAdminStudentsResponse {
@@ -576,6 +642,33 @@ export async function fetchAdminDashboard() {
       matricule: item.matricule,
       photoUrl: item.photo_url,
     })),
+    advanced: {
+      forceGraph: response.data.advanced.force_graph,
+      sunburst: response.data.advanced.sunburst,
+      globe: {
+        hub: response.data.advanced.globe.hub,
+        nodes: response.data.advanced.globe.nodes,
+        arcs: response.data.advanced.globe.arcs.map((item) => ({
+          fromName: item.from_name,
+          toName: item.to_name,
+          fromLat: item.from_lat,
+          fromLng: item.from_lng,
+          toLat: item.to_lat,
+          toLng: item.to_lng,
+          value: item.value,
+          students: item.students,
+          candidatures: item.candidatures,
+        })),
+      },
+      streamSeed: response.data.advanced.stream_seed.map((item) => ({
+        timestamp: item.timestamp,
+        label: item.label,
+        revenue: item.revenue,
+        pendingPayments: item.pending_payments,
+        pendingApplications: item.pending_applications,
+        activeStudents: item.active_students,
+      })),
+    },
   } satisfies AdminDashboardData;
 }
 
