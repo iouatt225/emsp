@@ -20,7 +20,6 @@ from apps.formations.models import Filiere
 from apps.inscriptions.models import Candidature
 
 from .demo import ensure_portal_demo_data
-from .dashboard_visuals import build_advanced_dashboard_payload
 from .models import (
     EmploiDuTempsItem,
     Enseignant,
@@ -1093,24 +1092,20 @@ class AdminDashboardApiView(APIView):
                         {"label": "Juin", "paid": 0, "due": 0},
                     ],
                     "latest_inscriptions": latest_inscriptions,
-                    "advanced": build_advanced_dashboard_payload(
-                        "legacy",
-                        legacy_results=legacy_payload["results"],
-                    ),
                 }
             )
 
         ensure_portal_demo_data()
 
-        students = Etudiant.objects.select_related("formation", "user").all()
-        notes = Note.objects.all()
+        students_queryset = Etudiant.objects.select_related("formation", "user", "photo").prefetch_related("notes")
         payments = Paiement.objects.all()
 
-        total_students = students.count()
+        total_students = students_queryset.count()
         paid_amount = payments.filter(statut="confirmed").aggregate(total=Sum("montant"))["total"] or Decimal("0.00")
-        due_amount = students.aggregate(total=Sum("solde_scolarite"))["total"] or Decimal("0.00")
+        due_amount = students_queryset.aggregate(total=Sum("solde_scolarite"))["total"] or Decimal("0.00")
         recovery_rate = float((paid_amount / (paid_amount + due_amount) * 100) if (paid_amount + due_amount) else 0)
 
+        students = list(students_queryset)
         student_averages = []
         for student in students:
             average = _weighted_average(list(student.notes.all()))
@@ -1125,8 +1120,8 @@ class AdminDashboardApiView(APIView):
 
         pending_applications = Candidature.objects.filter(status__in=["submitted", "under_review"]).count()
 
-        country_data = list(students.values("pays").annotate(total=Count("id")).order_by("pays"))
-        formation_data = list(students.values("formation__nom").annotate(total=Count("id")).order_by("-total"))
+        country_data = list(students_queryset.values("pays").annotate(total=Count("id")).order_by("pays"))
+        formation_data = list(students_queryset.values("formation__nom").annotate(total=Count("id")).order_by("-total"))
         monthly_finance = []
         for index in range(1, 7):
             paid = payments.filter(created_at__month=index, statut="confirmed").aggregate(total=Sum("montant"))["total"] or Decimal("0.00")
@@ -1138,7 +1133,7 @@ class AdminDashboardApiView(APIView):
                 }
             )
 
-        recent_students = students.order_by("-enrolled_at")[:5]
+        recent_students = students_queryset.order_by("-enrolled_at")[:5]
         if recent_students:
             latest_inscriptions = [
                 {
@@ -1177,7 +1172,6 @@ class AdminDashboardApiView(APIView):
                 "yearly_enrolments": evolution,
                 "monthly_finance": monthly_finance,
                 "latest_inscriptions": latest_inscriptions,
-                "advanced": build_advanced_dashboard_payload("portal", students=students),
             }
         )
 

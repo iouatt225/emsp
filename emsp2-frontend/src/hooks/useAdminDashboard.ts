@@ -19,14 +19,16 @@ export const useAdminDashboard = () =>
   useQuery({
     queryKey: ["admin", "dashboard"],
     queryFn: fetchAdminDashboard,
-    staleTime: 60 * 1000,
+    staleTime: 5 * 60 * 1000,
+    refetchOnWindowFocus: false,
   });
 
 export const useFinanceSummary = () =>
   useQuery({
     queryKey: ["admin", "finance-summary"],
     queryFn: fetchFinanceSummary,
-    staleTime: 60 * 1000,
+    staleTime: 5 * 60 * 1000,
+    refetchOnWindowFocus: false,
   });
 
 export const useAdminStudents = (filters: {

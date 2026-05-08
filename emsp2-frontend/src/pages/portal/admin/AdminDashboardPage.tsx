@@ -1,15 +1,13 @@
-import { lazy, Suspense } from "react";
 import { Clock3, GraduationCap, TrendingUp, Users } from "lucide-react";
 import { Link } from "react-router-dom";
 
 import AdminPageHeader from "../../../components/dashboard/AdminPageHeader";
+import AdvancedDashboardCharts from "../../../components/dashboard/AdvancedDashboardCharts";
 import SurfaceCard from "../../../components/dashboard/SurfaceCard";
 import { getVisibleAdminPortalItems } from "../../../config/adminPortal";
 import { useAuth } from "../../../hooks/useAuth";
 import { AreaComparisonChart, DonutBreakdown, HorizontalBars, MiniLineChart } from "../../../components/dashboard/SvgCharts";
 import { useAdminDashboard, useFinanceSummary } from "../../../hooks/useAdminDashboard";
-
-const AdvancedDashboardCharts = lazy(() => import("../../../components/dashboard/AdvancedDashboardCharts"));
 
 const AdminDashboardPage = () => {
   const { user } = useAuth();
@@ -165,15 +163,13 @@ const AdminDashboardPage = () => {
 
       <div className="space-y-4">
         <div>
-          <p className="text-sm uppercase tracking-[0.24em] text-secondary">Analyse avancee</p>
-          <h2 className="mt-2 font-display text-2xl font-bold text-dark">Visualisations immersives du campus</h2>
+          <p className="text-sm uppercase tracking-[0.24em] text-secondary">Analyse rapide</p>
+          <h2 className="mt-2 font-display text-2xl font-bold text-dark">Vue legere du pilotage</h2>
           <p className="mt-2 max-w-4xl text-sm leading-6 text-slate-600">
-            Vue relationnelle 3D et exploration hierarchique avec une charge plus legere pour la production.
+            Graphiques compacts et immediats, optimises pour un affichage plus rapide en production.
           </p>
         </div>
-        <Suspense fallback={<div className="h-[420px] animate-pulse rounded-3xl bg-white" />}>
-          <AdvancedDashboardCharts advanced={data.advanced} />
-        </Suspense>
+        <AdvancedDashboardCharts data={data} />
       </div>
 
       <SurfaceCard className="emsp-panel p-6">
