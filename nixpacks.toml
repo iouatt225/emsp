@@ -2,7 +2,7 @@ providers = ["python"]
 
 [phases.setup]
 nixPkgs = [
-  "python311",
+  "python311Full",
   "pkg-config",
   "pango",
   "cairo",
