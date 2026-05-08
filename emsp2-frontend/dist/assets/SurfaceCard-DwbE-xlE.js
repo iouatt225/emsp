@@ -1,1 +1,0 @@
-import{ae as t}from"./vendor-core-D9yEVfkg.js";const s=({children:r,className:a="",...o})=>t.jsx("section",{...o,className:`rounded-2xl border border-slate-200/90 bg-white shadow-maxton-card ring-1 ring-slate-900/[0.03] transition duration-200 hover:shadow-maxton ${a}`,children:r});export{s as S};

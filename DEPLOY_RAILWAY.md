@@ -8,12 +8,14 @@
   - `nixpacks.toml`
   - `railway.json`
   - `runtime.txt`
+  - `.dockerignore`
   - `.gitignore`
   - `emsp1/settings.py`
   - `emsp1/urls.py`
   - `apps/core/urls.py`
   - fichiers React modifies dans `emsp2-frontend/src`
 - Ne jamais commiter `.env`, `db.sqlite3`, `.venv/`, `staticfiles/` ni `node_modules/`.
+- S'assurer que `.dockerignore` exclut aussi `node_modules/`, `emsp2-frontend/node_modules/` et les artefacts locaux pour eviter qu'un environnement Windows ecrase les dependances Linux pendant le build Railway.
 
 ## 2. Creer le projet Railway
 

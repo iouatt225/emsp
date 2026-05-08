@@ -1,12 +1,15 @@
+.git
+.gitignore
 .env
-*.pyc
 __pycache__/
+*.pyc
 .venv/
 .venv313/
 node_modules/
 emsp2-frontend/node_modules/
 emsp2-frontend/dist/
 staticfiles/
-db.sqlite3
 *.log
 *.tsbuildinfo
+db.sqlite3
+media/
