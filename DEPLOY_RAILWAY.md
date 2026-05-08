@@ -40,6 +40,19 @@ SESSION_COOKIE_SECURE=True
 CSRF_COOKIE_SECURE=True
 ```
 
+Note frontend :
+
+- Si le frontend React et Django sont servis par le meme service Railway, aucune variable `VITE_API_BASE_URL` n'est necessaire.
+- Le frontend peut appeler l'API via `/api` sur le meme domaine.
+- Ne definir `VITE_API_BASE_URL` que si l'API est hebergee sur un autre domaine.
+
+Important pour `DATABASE_URL` :
+
+- Utiliser de preference une reference Railway vers le service PostgreSQL du meme projet, par exemple `\${{Postgres.DATABASE_URL}}`.
+- Ne pas copier manuellement une URL interne du type `postgres.railway.internal` depuis un autre projet ou un autre environnement.
+- Si le service web et PostgreSQL ne sont pas dans le meme projet Railway, l'hostname interne Railway peut etre introuvable au runtime.
+- En cas de doute, supprimer puis recreer la variable `DATABASE_URL` via la reference Railway du service PostgreSQL attache au projet courant.
+
 Pour generer une cle Django :
 
 ```bash
@@ -84,7 +97,7 @@ python manage.py migrate && gunicorn emsp1.wsgi:application --bind 0.0.0.0:$PORT
 - La base locale `db.sqlite3` ne sera pas utilisee sur Railway.
 - PostgreSQL Railway sera vide au premier deploiement.
 - Importer les donnees importantes via fixtures, admin Django, ou script de migration.
-- Les fichiers dans `media/` existants dans le depot seront servis.
+- Les fichiers dans `media/` existants dans le depot seront servis, a condition de ne pas exclure `media/` dans `.dockerignore`.
 - Les futurs uploads utilisateurs sur Railway ne sont pas persistants sans volume ou stockage externe. Pour une vraie production, ajouter un volume Railway ou un stockage type S3/Cloudinary.
 
 ## 7. Verification locale avant push

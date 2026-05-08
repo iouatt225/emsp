@@ -1,9 +1,25 @@
 import axios from "axios";
 
-const API_BASE_URL =
+const normalizeBaseUrl = (value: string) => value.replace(/\/+$/, "");
+
+const getDefaultApiBaseUrl = () => {
+  if (typeof window === "undefined") {
+    return "/api";
+  }
+
+  const { hostname } = window.location;
+  if (hostname === "localhost" || hostname === "127.0.0.1") {
+    return "http://localhost:8000/api";
+  }
+
+  return "/api";
+};
+
+const API_BASE_URL = normalizeBaseUrl(
   import.meta.env.VITE_API_BASE_URL ||
-  import.meta.env.REACT_APP_API_BASE_URL ||
-  "http://localhost:8000/api";
+    import.meta.env.REACT_APP_API_BASE_URL ||
+    getDefaultApiBaseUrl(),
+);
 
 export const axiosInstance = axios.create({
   baseURL: API_BASE_URL,

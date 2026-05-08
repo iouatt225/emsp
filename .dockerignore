@@ -12,4 +12,3 @@ staticfiles/
 *.log
 *.tsbuildinfo
 db.sqlite3
-media/
