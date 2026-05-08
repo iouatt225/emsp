@@ -15,7 +15,7 @@ export interface AdminPortalItem {
 
 export const fullAdminRoles: AdminRole[] = ["staff", "compta", "admin"];
 export const limitedAdminRoles: AdminRole[] = ["staff", "compta", "admin", "direction"];
-export const staticAdminDashboardPath = "/dashboard/index.html";
+export const staticAdminDashboardPath = "/admin/dashboard";
 
 export const adminPortalItems: AdminPortalItem[] = [
   {

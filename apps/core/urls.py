@@ -8,14 +8,10 @@ app_name = "core"
 urlpatterns = [
     path("", views.react_app, name="home"),
     path("index.html", RedirectView.as_view(url="/", permanent=False), name="legacy_public_home"),
-    path("admin/", RedirectView.as_view(url="/dashboard/index.html", permanent=False), name="admin_dashboard_redirect"),
-    re_path(
-        r"^admin/.+$",
-        RedirectView.as_view(url="/dashboard/index.html", permanent=False),
-        name="admin_dashboard_deep_redirect",
-    ),
-    path("dashboard/", RedirectView.as_view(url="/dashboard/index.html", permanent=False), name="dashboard_redirect"),
-    path("dashboard/<path:path>", views.emsp_dashboard_file, name="emsp_dashboard_file"),
+    path("admin/", views.react_app, name="admin_dashboard_redirect"),
+    re_path(r"^admin/.+$", views.react_app, name="admin_dashboard_deep_redirect"),
+    path("dashboard/", RedirectView.as_view(url="/admin/dashboard", permanent=False), name="dashboard_redirect"),
+    path("dashboard/<path:path>", RedirectView.as_view(url="/admin/dashboard", permanent=False), name="emsp_dashboard_file"),
     path("login", views.react_app, name="login"),
     path("login.html", RedirectView.as_view(url="/login", permanent=False), name="legacy_login_page"),
     path("js/<path:path>", views.emsp_frontend_js, name="emsp_frontend_js"),

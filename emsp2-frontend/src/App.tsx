@@ -44,7 +44,7 @@ const PortalFallback = () => <div className="h-72 animate-pulse rounded-2xl bg-w
 
 const DashboardExternalRedirect = () => {
   useEffect(() => {
-    window.location.replace("/dashboard/index.html");
+    window.location.replace("/admin/dashboard");
   }, []);
 
   return <PortalFallback />;
