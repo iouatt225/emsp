@@ -4,7 +4,7 @@ from decimal import Decimal
 
 from django.contrib.auth import get_user_model
 from django.db import connection, transaction
-from django.db.models import Count, Q, Sum
+from django.db.models import Case, Count, DecimalField, ExpressionWrapper, F, Q, Sum, Value, When
 from django.utils import timezone
 from rest_framework import serializers, status
 from rest_framework.exceptions import NotFound
@@ -1097,7 +1097,7 @@ class AdminDashboardApiView(APIView):
 
         ensure_portal_demo_data()
 
-        students_queryset = Etudiant.objects.select_related("formation", "user", "photo").prefetch_related("notes")
+        students_queryset = Etudiant.objects.select_related("formation", "user", "photo")
         payments = Paiement.objects.all()
 
         total_students = students_queryset.count()
@@ -1105,18 +1105,33 @@ class AdminDashboardApiView(APIView):
         due_amount = students_queryset.aggregate(total=Sum("solde_scolarite"))["total"] or Decimal("0.00")
         recovery_rate = float((paid_amount / (paid_amount + due_amount) * 100) if (paid_amount + due_amount) else 0)
 
-        students = list(students_queryset)
-        student_averages = []
-        for student in students:
-            average = _weighted_average(list(student.notes.all()))
-            if average:
-                student_averages.append(average)
-        success_rate = 0.0
-        if student_averages:
-            success_rate = round(
-                len([value for value in student_averages if value >= 10]) / len(student_averages) * 100,
-                2,
+        scored_students = (
+            students_queryset.annotate(
+                weighted_score=Sum(
+                    ExpressionWrapper(
+                        F("notes__note") * F("notes__coefficient"),
+                        output_field=DecimalField(max_digits=12, decimal_places=2),
+                    )
+                ),
+                total_coeff=Sum("notes__coefficient", output_field=DecimalField(max_digits=12, decimal_places=2)),
             )
+            .annotate(
+                average_score=Case(
+                    When(
+                        total_coeff__gt=0,
+                        then=ExpressionWrapper(
+                            F("weighted_score") / F("total_coeff"),
+                            output_field=DecimalField(max_digits=7, decimal_places=2),
+                        ),
+                    ),
+                    default=Value(None),
+                    output_field=DecimalField(max_digits=7, decimal_places=2),
+                )
+            )
+            .exclude(average_score__isnull=True)
+        )
+        scored_count = scored_students.count()
+        success_rate = round(scored_students.filter(average_score__gte=Decimal("10.00")).count() / scored_count * 100, 2) if scored_count else 0.0
 
         pending_applications = Candidature.objects.filter(status__in=["submitted", "under_review"]).count()
 

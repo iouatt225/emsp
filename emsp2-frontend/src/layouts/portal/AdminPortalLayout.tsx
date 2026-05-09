@@ -73,6 +73,7 @@ const AdminPortalLayout = () => {
   const [notifications, setNotifications] = useState<NotificationItem[]>([]);
   const [notificationsLoading, setNotificationsLoading] = useState(false);
   const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
+  const [notificationsLoadedAt, setNotificationsLoadedAt] = useState<number | null>(null);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [profileForm, setProfileForm] = useState({
     username: user?.username || user?.email || "",
@@ -151,101 +152,92 @@ const AdminPortalLayout = () => {
     setIsNotificationsOpen(false);
   }, [location.pathname, location.search]);
 
-  useEffect(() => {
-    let cancelled = false;
+  const loadNotifications = async () => {
+    try {
+      setNotificationsLoading(true);
+      const nextNotifications: NotificationItem[] = [];
 
-    const loadNotifications = async () => {
-      try {
-        setNotificationsLoading(true);
-        const nextNotifications: NotificationItem[] = [];
-
-        if (!user?.firstName || !user?.lastName || !user?.avatarUrl) {
-          nextNotifications.push({
-            id: "profile-incomplete",
-            title: "Profil admin a completer",
-            description: "Ajoutez votre photo et verifiez vos informations de compte.",
-          });
-        }
-
-        const requests: Promise<void>[] = [];
-
-        if (canAccess("/admin/comptabilite")) {
-          requests.push(
-            fetchAdminPayments({ status: "pending" }).then((data) => {
-              if (data.summary.pendingCount > 0) {
-                nextNotifications.push({
-                  id: "payments-pending",
-                  title: `${data.summary.pendingCount} paiements en attente`,
-                  description: "Des transactions demandent une verification comptable.",
-                  to: "/admin/comptabilite?status=pending",
-                });
-              }
-            }),
-          );
-        }
-
-        if (canAccess("/admin/candidatures")) {
-          requests.push(
-            fetchAdminApplications({ status: "submitted" }).then((data) => {
-              if (data.summary.pending > 0) {
-                nextNotifications.push({
-                  id: "applications-pending",
-                  title: `${data.summary.pending} candidatures a traiter`,
-                  description: "Des dossiers attendent une prise en charge.",
-                  to: "/admin/candidatures?status=submitted",
-                });
-              }
-            }),
-          );
-        }
-
-        if (canAccess("/admin/transport")) {
-          requests.push(
-            axiosInstance.get<TransportOverviewSummary>("/scolarite/admin/transport/").then((response) => {
-              const summary = response.data.summary;
-              if (!summary) return;
-              if (summary.cars === 0) {
-                nextNotifications.push({
-                  id: "transport-cars-empty",
-                  title: "Aucun car configure",
-                  description: "Ajoutez un premier vehicule dans la section transport.",
-                  to: "/admin/transport",
-                });
-              }
-              if (summary.drivers === 0) {
-                nextNotifications.push({
-                  id: "transport-drivers-empty",
-                  title: "Aucun chauffeur actif",
-                  description: "Pensez a creer un compte chauffeur et a l'affecter a un car.",
-                  to: "/admin/transport",
-                });
-              }
-            }),
-          );
-        }
-
-        await Promise.allSettled(requests);
-
-        if (cancelled) return;
-        setNotifications(nextNotifications);
-      } catch (error) {
-        console.error(error);
-        if (!cancelled) setNotifications([]);
-      } finally {
-        if (!cancelled) setNotificationsLoading(false);
+      if (!user?.firstName || !user?.lastName || !user?.avatarUrl) {
+        nextNotifications.push({
+          id: "profile-incomplete",
+          title: "Profil admin a completer",
+          description: "Ajoutez votre photo et verifiez vos informations de compte.",
+        });
       }
-    };
 
-    void loadNotifications();
-    return () => {
-      cancelled = true;
-    };
-  }, [items, location.pathname, user?.avatarUrl, user?.firstName, user?.lastName]);
+      const requests: Promise<void>[] = [];
+
+      if (canAccess("/admin/comptabilite")) {
+        requests.push(
+          fetchAdminPayments({ status: "pending" }).then((data) => {
+            if (data.summary.pendingCount > 0) {
+              nextNotifications.push({
+                id: "payments-pending",
+                title: `${data.summary.pendingCount} paiements en attente`,
+                description: "Des transactions demandent une verification comptable.",
+                to: "/admin/comptabilite?status=pending",
+              });
+            }
+          }),
+        );
+      }
+
+      if (canAccess("/admin/candidatures")) {
+        requests.push(
+          fetchAdminApplications({ status: "submitted" }).then((data) => {
+            if (data.summary.pending > 0) {
+              nextNotifications.push({
+                id: "applications-pending",
+                title: `${data.summary.pending} candidatures a traiter`,
+                description: "Des dossiers attendent une prise en charge.",
+                to: "/admin/candidatures?status=submitted",
+              });
+            }
+          }),
+        );
+      }
+
+      if (canAccess("/admin/transport")) {
+        requests.push(
+          axiosInstance.get<TransportOverviewSummary>("/scolarite/admin/transport/").then((response) => {
+            const summary = response.data.summary;
+            if (!summary) return;
+            if (summary.cars === 0) {
+              nextNotifications.push({
+                id: "transport-cars-empty",
+                title: "Aucun car configure",
+                description: "Ajoutez un premier vehicule dans la section transport.",
+                to: "/admin/transport",
+              });
+            }
+            if (summary.drivers === 0) {
+              nextNotifications.push({
+                id: "transport-drivers-empty",
+                title: "Aucun chauffeur actif",
+                description: "Pensez a creer un compte chauffeur et a l'affecter a un car.",
+                to: "/admin/transport",
+              });
+            }
+          }),
+        );
+      }
+
+      await Promise.allSettled(requests);
+
+      setNotifications(nextNotifications);
+      setNotificationsLoadedAt(Date.now());
+    } catch (error) {
+      console.error(error);
+      setNotifications([]);
+    } finally {
+      setNotificationsLoading(false);
+    }
+  };
 
   useEffect(() => {
     let cancelled = false;
 
-    if (!searchValue.trim()) {
+    if (!searchValue.trim() || searchValue.trim().length < 2) {
       setSearchSections([]);
       setIsSearching(false);
       return;
@@ -372,6 +364,19 @@ const AdminPortalLayout = () => {
   const handleSearchChange = (event: ChangeEvent<HTMLInputElement>) => {
     setSearchValue(event.target.value);
     setIsSearchOpen(true);
+  };
+
+  const handleNotificationsToggle = () => {
+    setIsNotificationsOpen((current) => {
+      const next = !current;
+      if (next && !notificationsLoading) {
+        const isStale = !notificationsLoadedAt || Date.now() - notificationsLoadedAt > 3 * 60 * 1000;
+        if (isStale) {
+          void loadNotifications();
+        }
+      }
+      return next;
+    });
   };
 
   const handleSearchSelect = (to: string) => {
@@ -619,7 +624,7 @@ const AdminPortalLayout = () => {
                 <div ref={notificationContainerRef} className="relative">
                   <button
                     type="button"
-                    onClick={() => setIsNotificationsOpen((current) => !current)}
+                    onClick={handleNotificationsToggle}
                     className="emsp-panel relative rounded-full p-2.5 text-slate-600 shadow-sm transition hover:border-indigo-200 hover:text-indigo-600"
                     aria-label="Notifications"
                   >

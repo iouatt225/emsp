@@ -11,11 +11,32 @@ import { useAdminDashboard, useFinanceSummary } from "../../../hooks/useAdminDas
 
 const AdminDashboardPage = () => {
   const { user } = useAuth();
-  const { data, isLoading } = useAdminDashboard();
-  const { data: finance } = useFinanceSummary();
+  const { data, isLoading, isError, refetch } = useAdminDashboard();
+  const { data: finance } = useFinanceSummary(Boolean(data));
 
-  if (isLoading || !data) {
+  if (isLoading && !data) {
     return <div className="h-96 animate-pulse rounded-3xl bg-white" />;
+  }
+
+  if (isError || !data) {
+    return (
+      <SurfaceCard className="emsp-panel p-8">
+        <div className="mx-auto flex max-w-xl flex-col items-center text-center">
+          <p className="text-sm uppercase tracking-[0.24em] text-secondary">Dashboard indisponible</p>
+          <h1 className="mt-3 font-display text-3xl font-bold text-dark">Les indicateurs mettent trop de temps a charger</h1>
+          <p className="mt-3 text-sm leading-6 text-slate-600">
+            Le portail admin reste accessible, mais cette vue n&apos;a pas reussi a recuperer les donnees a temps.
+          </p>
+          <button
+            type="button"
+            onClick={() => void refetch()}
+            className="mt-6 rounded-2xl bg-secondary px-5 py-3 text-sm font-semibold text-white transition hover:bg-emerald-600"
+          >
+            Reessayer le chargement
+          </button>
+        </div>
+      </SurfaceCard>
+    );
   }
 
   const kpis = [
