@@ -1,5 +1,5 @@
 import type { LucideIcon } from "lucide-react";
-import { Bell, BusFront, FileText, FolderOpen, GraduationCap, Image, LayoutDashboard, Receipt, Settings2, ShieldCheck, Users } from "lucide-react";
+import { Bell, BusFront, FileText, FolderOpen, GraduationCap, Image, LayoutDashboard, Receipt, Settings2, ShieldCheck, UserRound, Users } from "lucide-react";
 
 import type { User } from "../types";
 
@@ -52,6 +52,13 @@ export const adminPortalItems: AdminPortalItem[] = [
     icon: BusFront,
     description: "Cars, paiements et expirations",
     allowedRoles: limitedAdminRoles,
+  },
+  {
+    to: "/admin/utilisateurs",
+    label: "Utilisateurs",
+    icon: UserRound,
+    description: "Comptes, roles et acces",
+    allowedRoles: fullAdminRoles,
   },
   {
     to: "/admin/candidatures",

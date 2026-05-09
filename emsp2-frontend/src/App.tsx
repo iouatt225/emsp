@@ -32,6 +32,7 @@ const AdminStatisticsPage = lazy(() => import("./pages/portal/admin/AdminStatist
 const AdminStudentsPage = lazy(() => import("./pages/portal/admin/AdminStudentsPage"));
 const AdminTeachersPage = lazy(() => import("./pages/portal/admin/AdminTeachersPage"));
 const AdminTransportPage = lazy(() => import("./pages/portal/admin/AdminTransportPage"));
+const AdminUsersPage = lazy(() => import("./pages/portal/admin/AdminUsersPage"));
 const DriverTransportPage = lazy(() => import("./pages/portal/driver/DriverTransportPage"));
 const StudentDashboardPage = lazy(() => import("./pages/portal/student/StudentDashboardPage"));
 const StudentDocumentsPage = lazy(() => import("./pages/portal/student/StudentDocumentsPage"));
@@ -115,6 +116,7 @@ function App() {
 
           <Route element={<ProtectedRoute allowedRoles={fullAdminRoles} />}>
             <Route path="dashboard" element={<AdminDashboardPage />} />
+            <Route path="utilisateurs" element={<AdminUsersPage />} />
             <Route path="candidatures" element={<AdminApplicationsPage />} />
             <Route path="enseignants" element={<AdminTeachersPage />} />
             <Route path="statistiques" element={<AdminStatisticsPage />} />

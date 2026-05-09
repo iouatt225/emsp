@@ -45,6 +45,21 @@ export interface User {
   role: "etudiant" | "enseignant" | "staff" | "compta" | "admin" | "direction" | "chauffeur";
   phone?: string;
   avatarUrl?: string;
+  isActive?: boolean;
+}
+
+export interface AdminPortalUser extends User {
+  isActive: boolean;
+}
+
+export interface AdminPortalUserPayload {
+  firstName: string;
+  lastName: string;
+  email: string;
+  role: User["role"];
+  phone?: string;
+  password?: string;
+  isActive?: boolean;
 }
 
 export interface Etudiant {
