@@ -45,11 +45,7 @@ export async function updateCurrentUserProfile(payload: {
   if (payload.avatarFile) formData.append("avatar", payload.avatarFile);
   if (payload.removeAvatar) formData.append("remove_avatar", "true");
 
-  const response = await axiosInstance.patch<RawUser>("/auth/me/", formData, {
-    headers: {
-      "Content-Type": "multipart/form-data",
-    },
-  });
+  const response = await axiosInstance.patch<RawUser>("/auth/me/", formData);
 
   return normalizeUser(response.data);
 }

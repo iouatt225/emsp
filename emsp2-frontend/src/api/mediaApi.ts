@@ -64,21 +64,13 @@ export async function fetchAdminMedia(params?: { category?: string; type?: "imag
 }
 
 export async function createAdminMedia(payload: AdminMediaPayload) {
-  const response = await axiosInstance.post<RawAdminMediaItem>("/media/admin/", buildAdminMediaFormData(payload), {
-    headers: {
-      "Content-Type": "multipart/form-data",
-    },
-  });
+  const response = await axiosInstance.post<RawAdminMediaItem>("/media/admin/", buildAdminMediaFormData(payload));
 
   return mapAdminMediaItem(response.data);
 }
 
 export async function updateAdminMedia(id: number, payload: AdminMediaPayload) {
-  const response = await axiosInstance.patch<RawAdminMediaItem>(`/media/admin/${id}/`, buildAdminMediaFormData(payload), {
-    headers: {
-      "Content-Type": "multipart/form-data",
-    },
-  });
+  const response = await axiosInstance.patch<RawAdminMediaItem>(`/media/admin/${id}/`, buildAdminMediaFormData(payload));
 
   return mapAdminMediaItem(response.data);
 }

@@ -80,11 +80,7 @@ export async function updateSiteConfig(payload: SiteConfigUpdatePayload) {
     formData.append("logo", payload.logoFile);
   }
 
-  const response = await axiosInstance.patch<RawSiteConfig>("/config/admin/", formData, {
-    headers: {
-      "Content-Type": "multipart/form-data",
-    },
-  });
+  const response = await axiosInstance.patch<RawSiteConfig>("/config/admin/", formData);
 
   return mapSiteConfig(response.data);
 }

@@ -55,11 +55,6 @@ export async function submitInscription(payload: InscriptionFormData) {
   const response = await axiosInstance.post<InscriptionSubmissionResponse>(
     "/inscriptions/",
     formData,
-    {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-    },
   );
 
   return response.data;

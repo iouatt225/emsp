@@ -2,8 +2,7 @@
 
 ## Architecture cible
 
-- `emsp-backend`: service web Django pour l'API, l'administration et les vues serveur.
-- `emsp-frontend`: site statique React/Vite qui consomme l'API Django.
+- `emsp-backend`: service web Django pour l'API, l'administration et le site public React buildé dans le meme service.
 - `Supabase Postgres`: base de donnees persistante.
 - `Supabase Storage`: stockage persistant des fichiers `ImageField` et `FileField`.
 
@@ -30,11 +29,39 @@ SUPABASE_STORAGE_REGION=eu-west-1
 SUPABASE_STORAGE_LOCATION=media
 ```
 
+### Bloc Render pret a coller
+
+```env
+ALLOWED_HOSTS=.onrender.com
+CORS_ALLOWED_ORIGINS=https://emsp.onrender.com
+CORS_ALLOWED_ORIGIN_REGEXES=^https://.*\.onrender\.com$
+CORS_ALLOW_ALL_ORIGINS=False
+CSRF_COOKIE_SECURE=True
+CSRF_TRUSTED_ORIGINS=https://*.onrender.com
+DATABASE_URL=postgresql://postgres.<project-ref>:<password>@aws-1-eu-central-1.pooler.supabase.com:6543/postgres
+DEBUG=False
+SECRET_KEY=<generate-a-new-django-secret>
+SESSION_COOKIE_SECURE=True
+SUPABASE_STORAGE_ACCESS_KEY=<supabase-storage-access-key>
+SUPABASE_STORAGE_BUCKET=emsp1
+SUPABASE_STORAGE_ENDPOINT=https://eymfvjdfeamexeuelutc.supabase.co/storage/v1/s3
+SUPABASE_STORAGE_LOCATION=media
+SUPABASE_STORAGE_PUBLIC_URL=https://eymfvjdfeamexeuelutc.supabase.co/storage/v1/object/public/emsp1
+SUPABASE_STORAGE_REGION=eu-west-1
+SUPABASE_STORAGE_SECRET_KEY=<supabase-storage-secret-key>
+VITE_API_BASE_URL=https://emsp.onrender.com/api
+```
+
 ### Remarques importantes
 
 - `DATABASE_URL` ne doit pas pointer vers `db.sqlite3`. Render efface le disque local entre les deploiements.
-- Le bucket Supabase doit etre public, sinon les URLs generées par Django ne seront pas lisibles dans le navigateur.
+- Le bucket Supabase doit etre public, sinon les URLs generees par Django ne seront pas lisibles dans le navigateur.
 - Si tu veux aussi utiliser Render pour la base de donnees, remplace simplement `DATABASE_URL` par l'URL du service Postgres Render.
+- Evite les guillemets autour des valeurs dans Render. Dans un vrai fichier `.env`, `env.list()` et `env.db()` peuvent parfois conserver les guillemets comme partie de la valeur.
+- Si une valeur commence par `#`, comme ton `SECRET_KEY`, il faut la mettre entre guillemets dans un vrai fichier `.env`, par exemple `SECRET_KEY="#..."`. Sinon `#` est interprete comme un commentaire.
+- Pour Supabase Storage, l'endpoint S3 doit ressembler a `https://<project-ref>.supabase.co/storage/v1/s3`.
+- La variable `SUPABASE_STORAGE_PUBLIC_URL` doit inclure le bucket, par exemple `https://<project-ref>.supabase.co/storage/v1/object/public/emsp1`.
+- Comme tu as partage un secret Supabase ici, considere le `SUPABASE_STORAGE_SECRET_KEY` comme a renouveler si ce fichier a ete expose ailleurs.
 
 ## Variables d'environnement du frontend
 
@@ -49,7 +76,7 @@ VITE_API_BASE_URL=https://<nom-du-backend>.onrender.com/api
 
 ### Backend
 
-- Build: `pip install -r requirements.txt && python manage.py collectstatic --noinput`
+- Build: `pip install -r requirements.txt && cd emsp2-frontend && npm ci && npm run build && cd .. && python manage.py collectstatic --noinput`
 - Start: `python manage.py migrate && gunicorn emsp1.asgi:application -k uvicorn.workers.UvicornWorker --bind 0.0.0.0:$PORT --access-logfile -`
 
 ### Cas du template Python Render
@@ -59,8 +86,7 @@ VITE_API_BASE_URL=https://<nom-du-backend>.onrender.com/api
 
 ### Frontend
 
-- Build: `cd emsp2-frontend && npm ci && npm run build`
-- Publish directory: `emsp2-frontend/dist`
+- Utilise uniquement le build Vite integre dans le service web principal.
 
 ## Validation apres deploiement
 

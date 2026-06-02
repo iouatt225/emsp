@@ -83,7 +83,7 @@ def newsletter_subscribe(request):
 def react_app(request, path=""):
     index_path = REACT_DIST_DIR / "index.html"
     if not index_path.exists():
-        raise Http404("Le build frontend est introuvable. Lancez `npm run build` dans `emsp2-frontend`.")
+        return home(request)
 
     return FileResponse(index_path.open("rb"), content_type="text/html; charset=utf-8")
 

@@ -1,5 +1,7 @@
 from pathlib import Path
 from datetime import timedelta
+import os
+from urllib.parse import parse_qsl, urlencode, urlsplit, urlunsplit
 import environ
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -76,6 +78,31 @@ DEFAULT_MYSQL_SQL_MODE = env(
     "MYSQL_SQL_MODE",
     default="STRICT_TRANS_TABLES,ERROR_FOR_DIVISION_BY_ZERO,NO_ZERO_DATE,NO_ZERO_IN_DATE,NO_ENGINE_SUBSTITUTION",
 )
+
+
+def _normalize_database_url(raw_url: str) -> str:
+    """
+    Remove connection-string query params that psycopg2 does not understand.
+
+    Render/Supabase pooler URLs often append `?pgbouncer=true`, but psycopg2
+    expects a plain PostgreSQL DSN. We keep the location/port and drop the
+    unsupported query string before Django parses it.
+    """
+
+    parts = urlsplit(raw_url)
+    if not parts.query:
+        return raw_url
+
+    filtered_query = urlencode(
+        [(key, value) for key, value in parse_qsl(parts.query, keep_blank_values=True) if key.lower() != "pgbouncer"]
+    )
+    return urlunsplit((parts.scheme, parts.netloc, parts.path, filtered_query, parts.fragment))
+
+
+database_url = env("DATABASE_URL", default=DEFAULT_DATABASE_URL)
+database_url = _normalize_database_url(database_url)
+os.environ["DATABASE_URL"] = database_url
+
 DATABASES = {
     "default": env.db(
         "DATABASE_URL",

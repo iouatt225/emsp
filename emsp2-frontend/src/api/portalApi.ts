@@ -537,9 +537,7 @@ export async function updateEtudiantProfile(payload: { firstName: string; lastNa
 export async function uploadEtudiantPhoto(file: File) {
   const formData = new FormData();
   formData.append("photo", file);
-  const response = await axiosInstance.post<RawEtudiantProfile>("/scolarite/me/photo/", formData, {
-    headers: { "Content-Type": "multipart/form-data" },
-  });
+  const response = await axiosInstance.post<RawEtudiantProfile>("/scolarite/me/photo/", formData);
   return fetchEtudiantProfileFromRaw(response.data);
 }
 
