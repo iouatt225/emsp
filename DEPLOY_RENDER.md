@@ -52,6 +52,11 @@ VITE_API_BASE_URL=https://<nom-du-backend>.onrender.com/api
 - Build: `pip install -r requirements.txt && python manage.py collectstatic --noinput`
 - Start: `python manage.py migrate && gunicorn emsp1.asgi:application -k uvicorn.workers.UvicornWorker --bind 0.0.0.0:$PORT --access-logfile -`
 
+### Cas du template Python Render
+
+- Si Render lance encore `gunicorn app:app`, le fichier [app.py](C:\Users\DEPS\emsp1\app.py) ajoute un point d'entree compatible pour que le service demarre quand meme.
+- Pour conserver les WebSockets et le comportement ASGI complet, remplace ensuite la commande de demarrage par celle du backend ci-dessus.
+
 ### Frontend
 
 - Build: `cd emsp2-frontend && npm ci && npm run build`
@@ -63,4 +68,3 @@ VITE_API_BASE_URL=https://<nom-du-backend>.onrender.com/api
 2. Ouvrir le frontend et verifier la connexion, les images et la mediatheque.
 3. Creer un superutilisateur si la base Supabase est vide.
 4. Uploader un fichier de test pour confirmer que Supabase Storage fonctionne.
-
