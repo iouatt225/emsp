@@ -6,6 +6,7 @@ import { canAccessAdminPath, staticAdminDashboardPath } from "../../config/admin
 import { driverHomePath, getUserHomePath, isAdminFamilyRole } from "../../config/portalAccess";
 import { useAuth } from "../../hooks/useAuth";
 import { useSiteConfig } from "../../hooks/useSiteConfig";
+import { resolvePublicAssetUrl } from "../../utils/media";
 
 const LoginPage = () => {
   const { data: site } = useSiteConfig();
@@ -86,7 +87,7 @@ const LoginPage = () => {
         {/* Maxton auth-cover — illustration */}
         <div className="relative hidden overflow-hidden bg-secondary lg:col-span-7 lg:block">
           <img
-            src="/media/imageemsp/Photo%20de%20Al%C3%A8ve(11).jpg"
+            src={resolvePublicAssetUrl("/media/imageemsp/Photo%20de%20Al%C3%A8ve(11).jpg")}
             alt="Conference academique EMSP"
             className="h-full w-full object-cover"
           />

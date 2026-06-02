@@ -45,3 +45,58 @@ export function getFileExtension(fileName?: string, url?: string): string {
   const extension = cleaned.split(".").pop();
   return extension ? extension.toUpperCase() : "FICHIER";
 }
+
+const normalizeBaseUrl = (value: string) => value.replace(/\/+$/, "");
+
+const getBackendBaseUrl = () => {
+  const configuredBaseUrl =
+    import.meta.env.VITE_MEDIA_BASE_URL ||
+    import.meta.env.VITE_API_BASE_URL ||
+    import.meta.env.REACT_APP_API_BASE_URL ||
+    "";
+
+  if (configuredBaseUrl) {
+    if (configuredBaseUrl.startsWith("http://") || configuredBaseUrl.startsWith("https://")) {
+      return normalizeBaseUrl(configuredBaseUrl.replace(/\/api\/?$/, ""));
+    }
+
+    if (configuredBaseUrl.startsWith("/")) {
+      return typeof window !== "undefined" ? normalizeBaseUrl(window.location.origin) : "";
+    }
+
+    return normalizeBaseUrl(configuredBaseUrl.replace(/\/api\/?$/, ""));
+  }
+
+  if (typeof window !== "undefined") {
+    const { hostname, origin } = window.location;
+    if (hostname === "localhost" || hostname === "127.0.0.1") {
+      return "http://localhost:8000";
+    }
+    return normalizeBaseUrl(origin);
+  }
+
+  return "";
+};
+
+export function resolvePublicAssetUrl(url?: string | null): string {
+  if (!url) {
+    return "";
+  }
+
+  if (
+    url.startsWith("http://") ||
+    url.startsWith("https://") ||
+    url.startsWith("//") ||
+    url.startsWith("blob:") ||
+    url.startsWith("data:")
+  ) {
+    return url;
+  }
+
+  if (!url.startsWith("/media/") && !url.startsWith("/static/")) {
+    return url;
+  }
+
+  const backendBaseUrl = getBackendBaseUrl();
+  return backendBaseUrl ? `${backendBaseUrl}${url}` : url;
+}

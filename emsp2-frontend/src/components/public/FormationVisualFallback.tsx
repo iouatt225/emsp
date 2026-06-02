@@ -1,4 +1,5 @@
 import type { Formation } from "../../types";
+import { resolvePublicAssetUrl } from "../../utils/media";
 
 interface FormationVisualFallbackProps {
   formation: Pick<Formation, "code" | "name" | "programType" | "level">;
@@ -21,12 +22,12 @@ const paletteByProgram: Record<Formation["programType"], { wrapper: string; badg
 };
 
 const formationFallbackImages = [
-  "/media/imageemsp/IMG-20250705-WA0133.jpg",
-  "/media/imageemsp/Photo%20de%20Al%C3%A8ve(11).jpg",
-  "/media/imageemsp/IMG-20251206-WA0229(1).jpg",
-  "/media/imageemsp/IMG-20250605-WA0018.jpg",
-  "/media/imageemsp/Photo%20de%20Al%C3%A8ve(4).jpg",
-  "/media/imageemsp/Photo%20de%20Al%C3%A8ve(9).jpg",
+  resolvePublicAssetUrl("/media/imageemsp/IMG-20250705-WA0133.jpg"),
+  resolvePublicAssetUrl("/media/imageemsp/Photo%20de%20Al%C3%A8ve(11).jpg"),
+  resolvePublicAssetUrl("/media/imageemsp/IMG-20251206-WA0229(1).jpg"),
+  resolvePublicAssetUrl("/media/imageemsp/IMG-20250605-WA0018.jpg"),
+  resolvePublicAssetUrl("/media/imageemsp/Photo%20de%20Al%C3%A8ve(4).jpg"),
+  resolvePublicAssetUrl("/media/imageemsp/Photo%20de%20Al%C3%A8ve(9).jpg"),
 ];
 
 const getFallbackImage = (code: string) => {

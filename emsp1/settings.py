@@ -12,7 +12,7 @@ SECRET_KEY = env("SECRET_KEY", default="django-insecure-change-me")
 DEBUG = env.bool("DEBUG", default=True)
 ALLOWED_HOSTS = env.list(
     "ALLOWED_HOSTS",
-    default=["localhost", "127.0.0.1", ".up.railway.app", ".railway.app"],
+    default=["localhost", "127.0.0.1", ".onrender.com"],
 )
 
 INSTALLED_APPS = [
@@ -91,6 +91,38 @@ if DATABASES["default"]["ENGINE"] == "django.db.backends.mysql":
         f"SET sql_mode='{DEFAULT_MYSQL_SQL_MODE}'",
     )
 
+SUPABASE_STORAGE_BUCKET = env("SUPABASE_STORAGE_BUCKET", default="")
+SUPABASE_STORAGE_ENDPOINT = env("SUPABASE_STORAGE_ENDPOINT", default="")
+SUPABASE_STORAGE_ACCESS_KEY = env("SUPABASE_STORAGE_ACCESS_KEY", default="")
+SUPABASE_STORAGE_SECRET_KEY = env("SUPABASE_STORAGE_SECRET_KEY", default="")
+SUPABASE_STORAGE_PUBLIC_URL = env("SUPABASE_STORAGE_PUBLIC_URL", default="")
+SUPABASE_STORAGE_REGION = env("SUPABASE_STORAGE_REGION", default="eu-west-1")
+SUPABASE_STORAGE_LOCATION = env("SUPABASE_STORAGE_LOCATION", default="media")
+USE_SUPABASE_STORAGE = all(
+    [
+        SUPABASE_STORAGE_BUCKET,
+        SUPABASE_STORAGE_ENDPOINT,
+        SUPABASE_STORAGE_ACCESS_KEY,
+        SUPABASE_STORAGE_SECRET_KEY,
+    ]
+)
+
+AWS_ACCESS_KEY_ID = SUPABASE_STORAGE_ACCESS_KEY
+AWS_SECRET_ACCESS_KEY = SUPABASE_STORAGE_SECRET_KEY
+AWS_STORAGE_BUCKET_NAME = SUPABASE_STORAGE_BUCKET
+AWS_S3_ENDPOINT_URL = SUPABASE_STORAGE_ENDPOINT
+AWS_S3_REGION_NAME = SUPABASE_STORAGE_REGION
+AWS_S3_SIGNATURE_VERSION = "s3v4"
+AWS_LOCATION = SUPABASE_STORAGE_LOCATION
+AWS_DEFAULT_ACL = None
+AWS_S3_FILE_OVERWRITE = False
+AWS_QUERYSTRING_AUTH = False
+AWS_S3_ADDRESSING_STYLE = "path"
+AWS_S3_CUSTOM_DOMAIN = SUPABASE_STORAGE_PUBLIC_URL
+AWS_S3_OBJECT_PARAMETERS = {
+    "CacheControl": "max-age=86400",
+}
+
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
@@ -122,7 +154,20 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [BASE_DIR / 'static']
 STATIC_ROOT = BASE_DIR / 'staticfiles'
-STATICFILES_STORAGE = "whitenoise.storage.CompressedStaticFilesStorage"
+
+STORAGES = {
+    "default": {
+        "BACKEND": "django.core.files.storage.FileSystemStorage",
+    },
+    "staticfiles": {
+        "BACKEND": "whitenoise.storage.CompressedStaticFilesStorage",
+    },
+}
+
+if USE_SUPABASE_STORAGE:
+    STORAGES["default"] = {
+        "BACKEND": "storages.backends.s3boto3.S3Boto3Storage",
+    }
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
@@ -149,9 +194,13 @@ SIMPLE_JWT = {
 
 CORS_ALLOW_ALL_ORIGINS = env.bool("CORS_ALLOW_ALL_ORIGINS", default=DEBUG)
 CORS_ALLOWED_ORIGINS = env.list("CORS_ALLOWED_ORIGINS", default=[])
+CORS_ALLOWED_ORIGIN_REGEXES = env.list(
+    "CORS_ALLOWED_ORIGIN_REGEXES",
+    default=[r"^https://.*\.onrender\.com$"],
+)
 CSRF_TRUSTED_ORIGINS = env.list(
     "CSRF_TRUSTED_ORIGINS",
-    default=["https://*.up.railway.app", "https://*.railway.app"],
+    default=["https://*.onrender.com"],
 )
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 SESSION_COOKIE_SECURE = env.bool("SESSION_COOKIE_SECURE", default=not DEBUG)

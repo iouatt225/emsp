@@ -1,5 +1,6 @@
 import axiosInstance from "./axiosConfig";
 import type { AdminMediaItem, AdminMediaPayload, MediaItem } from "../types";
+import { resolvePublicAssetUrl } from "../utils/media";
 
 interface RawMediaItem {
   id: number;
@@ -23,7 +24,7 @@ function mapMediaItem(item: RawMediaItem): MediaItem {
   return {
     id: item.id,
     title: item.title,
-    url: item.url,
+    url: resolvePublicAssetUrl(item.url),
     type: item.type,
     category: item.category,
     createdAt: item.created_at || "",

@@ -9,6 +9,7 @@ import { useMedia } from "../../hooks/useMedia";
 import { useNews } from "../../hooks/useNews";
 import { useSiteConfig } from "../../hooks/useSiteConfig";
 import { getFormationPath } from "../../utils/formations";
+import { resolvePublicAssetUrl } from "../../utils/media";
 
 const stats = [
   { label: "Pays Membres", target: 8 },
@@ -26,7 +27,7 @@ const heroTitles = [
 const primaryHeroImage = {
   id: -1,
   title: heroTitles[0],
-  url: "/media/imageemsp/Photo%20de%20Al%C3%A8ve.jpg",
+  url: resolvePublicAssetUrl("/media/imageemsp/Photo%20de%20Al%C3%A8ve.jpg"),
   altText: "Etudiants EMSP alignes dans la cour",
   type: "image" as const,
   category: "hero",
@@ -38,7 +39,7 @@ const fallbackHeroImages = [
   {
     id: -2,
     title: heroTitles[1],
-    url: "/media/imageemsp/Photo%20de%20Al%C3%A8ve(12).jpg",
+    url: resolvePublicAssetUrl("/media/imageemsp/Photo%20de%20Al%C3%A8ve(12).jpg"),
     altText: "Etudiants EMSP accueillant une responsable academique",
     type: "image" as const,
     category: "hero",
@@ -47,7 +48,7 @@ const fallbackHeroImages = [
   {
     id: -3,
     title: heroTitles[2],
-    url: "/media/imageemsp/Photo%20de%20Al%C3%A8ve(14).jpg",
+    url: resolvePublicAssetUrl("/media/imageemsp/Photo%20de%20Al%C3%A8ve(14).jpg"),
     altText: "Etudiants EMSP reunis dans la cour de l'ecole",
     type: "image" as const,
     category: "hero",
@@ -58,7 +59,7 @@ const fallbackHeroImages = [
 const fallbackPresentationImage = {
   id: -10,
   title: "Atelier IAC",
-  url: "/static/emsp/images/home-iac-classroom.jpg",
+  url: resolvePublicAssetUrl("/static/emsp/images/home-iac-classroom.jpg"),
   altText: "Etudiants EMSP dans une salle IAC",
   type: "image" as const,
   category: "fallback",
@@ -68,7 +69,7 @@ const fallbackPresentationImage = {
 const fallbackWhyImage = {
   id: -11,
   title: "Certification ARTCI ITU",
-  url: "/static/emsp/images/home-artci-itu.jpg",
+  url: resolvePublicAssetUrl("/static/emsp/images/home-artci-itu.jpg"),
   altText: "Groupe EMSP lors d'une certification ARTCI ITU",
   type: "image" as const,
   category: "fallback",
@@ -78,7 +79,7 @@ const fallbackWhyImage = {
 const fallbackPromoImage = {
   id: -12,
   title: "Ivoire Tech Forum",
-  url: "/static/emsp/images/home-tech-forum.jpg",
+  url: resolvePublicAssetUrl("/static/emsp/images/home-tech-forum.jpg"),
   altText: "EMSP au Ivoire Tech Forum",
   type: "image" as const,
   category: "fallback",
@@ -427,7 +428,7 @@ const HomePage = () => {
           <article className="flex h-full overflow-hidden rounded-lg bg-white shadow-sm ring-1 ring-secondary/20 transition hover:-translate-y-1 hover:shadow-[0_24px_55px_-35px_rgba(34,197,94,0.45)]">
             <div className="flex w-full flex-col">
               <img
-                src="/media/imageemsp/IMG-20250705-WA0133.jpg"
+                src={resolvePublicAssetUrl("/media/imageemsp/IMG-20250705-WA0133.jpg")}
                 alt="Etudiants EMSP reunis dans une salle"
                 className="h-48 w-full object-cover"
               />
@@ -443,7 +444,7 @@ const HomePage = () => {
             <article className="flex h-full overflow-hidden rounded-lg bg-white shadow-sm ring-1 ring-secondary/20 transition hover:-translate-y-1 hover:shadow-[0_24px_55px_-35px_rgba(34,197,94,0.45)]">
               <div className="flex w-full flex-col">
                 <img
-                  src="/media/imageemsp/Photo%20de%20Al%C3%A8ve(11).jpg"
+                  src={resolvePublicAssetUrl("/media/imageemsp/Photo%20de%20Al%C3%A8ve(11).jpg")}
                   alt="Conference academique EMSP en salle"
                   className="h-48 w-full object-cover"
                 />
@@ -459,7 +460,7 @@ const HomePage = () => {
             <article className="flex h-full overflow-hidden rounded-lg bg-white shadow-sm ring-1 ring-primary/50 transition hover:-translate-y-1 hover:shadow-[0_24px_55px_-35px_rgba(250,204,21,0.4)]">
               <div className="flex w-full flex-col">
                 <img
-                  src="/media/imageemsp/IMG-20251206-WA0229(1).jpg"
+                  src={resolvePublicAssetUrl("/media/imageemsp/IMG-20251206-WA0229(1).jpg")}
                   alt="Delegation EMSP au Ivoire Tech Forum"
                   className="h-48 w-full object-cover"
                 />

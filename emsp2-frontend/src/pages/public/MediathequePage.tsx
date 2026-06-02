@@ -5,7 +5,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useMedia } from "../../hooks/useMedia";
 import type { MediaItem } from "../../types";
 import { formatLongDate } from "../../utils/formatDate";
-import { getFileExtension, getYoutubeEmbedUrl, getYoutubeThumbnailUrl } from "../../utils/media";
+import { getFileExtension, getYoutubeEmbedUrl, getYoutubeThumbnailUrl, resolvePublicAssetUrl } from "../../utils/media";
 
 const tabs = [
   { value: "image", label: "Photos" },
@@ -19,7 +19,7 @@ const localGalleryImages: MediaItem[] = [
   {
     id: -101,
     title: "Vie etudiante EMSP",
-    url: "/media/imageemsp/IMG-20250705-WA0133.jpg",
+    url: resolvePublicAssetUrl("/media/imageemsp/IMG-20250705-WA0133.jpg"),
     type: "image",
     category: "Vie academique",
     createdAt: "",
@@ -28,7 +28,7 @@ const localGalleryImages: MediaItem[] = [
   {
     id: -102,
     title: "Conference academique",
-    url: "/media/imageemsp/Photo%20de%20Al%C3%A8ve(11).jpg",
+    url: resolvePublicAssetUrl("/media/imageemsp/Photo%20de%20Al%C3%A8ve(11).jpg"),
     type: "image",
     category: "Conferences",
     createdAt: "",
@@ -37,7 +37,7 @@ const localGalleryImages: MediaItem[] = [
   {
     id: -103,
     title: "Ivoire Tech Forum",
-    url: "/media/imageemsp/IMG-20251206-WA0229(1).jpg",
+    url: resolvePublicAssetUrl("/media/imageemsp/IMG-20251206-WA0229(1).jpg"),
     type: "image",
     category: "Evenements",
     createdAt: "",
@@ -46,7 +46,7 @@ const localGalleryImages: MediaItem[] = [
   {
     id: -104,
     title: "Temps fort academique",
-    url: "/media/imageemsp/IMG-20250605-WA0018.jpg",
+    url: resolvePublicAssetUrl("/media/imageemsp/IMG-20250605-WA0018.jpg"),
     type: "image",
     category: "Vie academique",
     createdAt: "",
@@ -55,7 +55,7 @@ const localGalleryImages: MediaItem[] = [
   {
     id: -105,
     title: "Promotion EMSP",
-    url: "/media/imageemsp/IMG-20250705-WA0078.jpg",
+    url: resolvePublicAssetUrl("/media/imageemsp/IMG-20250705-WA0078.jpg"),
     type: "image",
     category: "Vie academique",
     createdAt: "",
@@ -64,7 +64,7 @@ const localGalleryImages: MediaItem[] = [
   {
     id: -106,
     title: "Session de formation",
-    url: "/media/imageemsp/Photo%20de%20Al%C3%A8ve(4).jpg",
+    url: resolvePublicAssetUrl("/media/imageemsp/Photo%20de%20Al%C3%A8ve(4).jpg"),
     type: "image",
     category: "Formations",
     createdAt: "",
@@ -73,7 +73,7 @@ const localGalleryImages: MediaItem[] = [
   {
     id: -107,
     title: "Rencontre institutionnelle",
-    url: "/media/imageemsp/Photo%20de%20Al%C3%A8ve(9).jpg",
+    url: resolvePublicAssetUrl("/media/imageemsp/Photo%20de%20Al%C3%A8ve(9).jpg"),
     type: "image",
     category: "Conferences",
     createdAt: "",
@@ -82,7 +82,7 @@ const localGalleryImages: MediaItem[] = [
   {
     id: -108,
     title: "Communaute EMSP",
-    url: "/media/imageemsp/IMG-20250705-WA0113.jpg",
+    url: resolvePublicAssetUrl("/media/imageemsp/IMG-20250705-WA0113.jpg"),
     type: "image",
     category: "Evenements",
     createdAt: "",
