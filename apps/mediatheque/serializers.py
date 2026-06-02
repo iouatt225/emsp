@@ -1,4 +1,5 @@
 from rest_framework import serializers
+from django.urls import reverse
 
 from .models import MediaItem
 
@@ -26,7 +27,8 @@ class MediaItemSerializer(serializers.ModelSerializer):
     def get_url(self, obj):
         request = self.context.get("request")
         if obj.file and request:
-            return request.build_absolute_uri(obj.file.url)
+            proxy_url = reverse("media_file_proxy", args=[obj.pk])
+            return request.build_absolute_uri(proxy_url)
         if obj.file:
             return obj.file.url
         return obj.video_url or ""

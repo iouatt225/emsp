@@ -8,6 +8,7 @@ from apps.accounts.permissions import IsFullAdminAccess
 
 from .models import MediaItem
 from .serializers import MediaItemAdminSerializer, MediaItemSerializer
+from .views import media_file_proxy
 
 
 def _parse_limit(value):
@@ -110,6 +111,7 @@ class MediaAdminDetailApi(APIView):
 urlpatterns = [
     path("admin/", MediaAdminListApi.as_view(), name="media_admin_list_api"),
     path("admin/<int:pk>/", MediaAdminDetailApi.as_view(), name="media_admin_detail_api"),
+    path("<int:pk>/file/", media_file_proxy, name="media_file_proxy"),
     path("", media_list_api, name="media_list_api"),
     path("<int:pk>/", media_detail_api, name="media_detail_api"),
 ]

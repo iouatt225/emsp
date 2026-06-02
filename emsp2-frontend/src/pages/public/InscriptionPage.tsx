@@ -200,6 +200,38 @@ const backendFieldMap: Partial<Record<string, FieldPath<InscriptionFormData>>> =
   terms_accepted: "termsAccepted",
 };
 
+function extractServerErrorMessage(payload: unknown) {
+  if (!payload || typeof payload !== "object") {
+    return "";
+  }
+
+  const typedPayload = payload as Record<string, unknown>;
+  if (typeof typedPayload.detail === "string" && typedPayload.detail.trim()) {
+    return typedPayload.detail;
+  }
+
+  const nonFieldErrors = typedPayload.non_field_errors;
+  if (Array.isArray(nonFieldErrors) && nonFieldErrors.length > 0) {
+    return nonFieldErrors.map((item) => String(item)).join(" ");
+  }
+
+  return Object.entries(typedPayload)
+    .map(([key, value]) => {
+      if (Array.isArray(value)) {
+        return `${key}: ${value.map((item) => String(item)).join(" ")}`;
+      }
+      if (typeof value === "string") {
+        return `${key}: ${value}`;
+      }
+      if (value && typeof value === "object") {
+        return `${key}: ${JSON.stringify(value)}`;
+      }
+      return `${key}: ${String(value)}`;
+    })
+    .filter(Boolean)
+    .join(" | ");
+}
+
 function getStoredDraft() {
   try {
     const raw = localStorage.getItem(DRAFT_KEY);
@@ -323,7 +355,8 @@ const InscriptionPage = () => {
         return;
       }
 
-      setServerError("Le dossier contient des erreurs. Corrigez-les puis relancez l'envoi.");
+      const serverMessage = extractServerErrorMessage(payload);
+      setServerError(serverMessage || "Le dossier contient des erreurs. Corrigez-les puis relancez l'envoi.");
       Object.entries(payload).forEach(([key, value]) => {
         const fieldName = backendFieldMap[key];
         if (!fieldName) {

@@ -1,4 +1,5 @@
 from django.db import models
+from django.urls import reverse
 
 
 class MediaItem(models.Model):
@@ -22,6 +23,8 @@ class MediaItem(models.Model):
     @property
     def url(self):
         if self.file:
+            if self.pk:
+                return reverse("media_file_proxy", args=[self.pk])
             return self.file.url
         if self.video_url:
             return self.video_url

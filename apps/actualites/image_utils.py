@@ -2,6 +2,7 @@ from pathlib import Path
 from zlib import crc32
 
 from django.conf import settings
+from django.urls import reverse
 from django.utils.encoding import filepath_to_uri
 
 
@@ -34,7 +35,7 @@ def attach_article_display_images(articles):
 
     for article in articles:
         if getattr(article, "cover", None):
-            article.display_image_url = article.cover.url
+            article.display_image_url = reverse("media_file_proxy", args=[article.cover.pk]) if article.cover.pk else article.cover.url
             article.display_image_alt = article.cover.alt_text or article.titre
             article.display_image_is_fallback = False
             continue
